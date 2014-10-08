@@ -58,8 +58,7 @@
 
 	try 
 	{
-		$strSQL = "DELETE FROM bornes;";
-
+		
 		$bd = new PDO("mysql:host=$dbHote; dbname=$dbNom", 
 				$dbUtilisateur, 
 				$dbMotPasse, 
@@ -68,13 +67,29 @@
 		$bd->setAttribute(PDO::ATTR_ERRMODE, 
 				PDO::ERRMODE_EXCEPTION);
 
+		$strSQL = "CREATE TABLE IF NOT EXISTS bornes (
+				Id int(11) NOT NULL AUTO_INCREMENT,
+				arrond varchar(25) NOT NULL,
+				batiment varchar(30) NOT NULL,
+				rue int(75) NOT NULL,
+				noCivic varchar(10) NOT NULL,
+				nom varchar(10) NOT NULL,
+				coord_x double NOT NULL,
+				coord_y double NOT NULL,
+				PRIMARY KEY (`Id`)
+				);";
+
+		$bd->exec($strSQL);
+
+		$strSQL = "DELETE FROM bornes;";
+		
 		$bd->exec($strSQL);
 
 		print("Ok!\r\n");
 
 	} catch (PDOException $pdo_e) 
 	{
-		print ("\r\nErreur lors de la tentative de DELETE sur la table 'bornes'.\r\nTerminaison du script d'importation...\r\n");
+		print ("\r\nErreur lors de la tentative de CREATE/DELETE sur la table 'bornes'.\r\nTerminaison du script d'importation...\r\n");
 		exit();
 	}
 

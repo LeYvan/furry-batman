@@ -7,7 +7,7 @@
 		$_GET['action'] = 'chercherBornes';
 	}
 
-	require("./include/bd.php");
+	require("./include/listeBornes.php");
 
 	try
 	{
@@ -24,6 +24,7 @@
 	function envoyerHeaders()
 	{
 		header("Content-Type: text/json; charset=UTF-8");
+		header("Access-Control-Allow-Origin: http://localhost");
 	}
 
 	//=============================================================================
