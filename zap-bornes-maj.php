@@ -1,7 +1,7 @@
 <?php
 	error_reporting(0);
 	
-	require("include/config.php");
+	require("include/param-bd.inc");
 
 	print("Récupération de la dernière version du fichier de la ville...\r\n");
 

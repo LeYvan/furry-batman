@@ -31,28 +31,10 @@
 	function chercherBornes()
 	{
 		$objJSON = new stdClass();
-
 		$objJSON->resultat = "ok";
-		//$listeBornes->bornes = array();
-
-		/*
-		$i = 0;
-		while ($i < 10)
-		{
-			$listeBornes->bornes[$i] = new stdClass();
-
-			$listeBornes->bornes[$i]->nom = "Borne_" .  $i;
-			$listeBornes->bornes[$i]->pos->x = 90;
-			$listeBornes->bornes[$i]->pos->y = 180;
-			$i++;
-		}
-		*/
-
 
 		$bornes = new ListeBornes();
 		$objJSON->bornes = $bornes->getAllBornes();
-
-		//print_r($objJSON);
 
 		print(json_encode($objJSON,JSON_UNESCAPED_UNICODE));
 	}
@@ -76,8 +58,6 @@
 
 		if (isset($_GET['action']))
 		{
-			// Checker si la requête est valide
-			// SELECT dans la BD les bornes
 			if ($_GET['action'] == 'chercherBornes')
 			{
 				chercherBornes();
