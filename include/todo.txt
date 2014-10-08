@@ -1,0 +1,23 @@
+Côté client:
+
+	Les avis
+		Les afficher
+		En ajouter (REQUËTE POST)
+		Générer des avis bidon
+
+	Les arrondissements
+		Les récupérer d'un script PHP en XML
+		Afficher les polygones dans MAPS
+
+	Les trajets RTC
+		Afficher le fichier KML du TP1 dans MAPS
+
+Côté serveur:
+
+	Les avis
+		INSERT dans la table
+		SELECT dabs la table
+
+	Les arrondissement
+		RÉCUPÉRER le fichier XML de la ville
+		Renvoyer les polygones dans un format XML custom
