@@ -1,0 +1,32 @@
+html 
+{ 
+	height: 100%; 
+}
+body 
+{
+	 height: 100%; 
+	 margin: 0; 
+	 padding: 0; 
+	 position : relative;
+}
+#carte-canvas 
+{ 
+	height: 100%; 
+	background-color: #ccc; 
+}
+
+#boutonOptions{
+	position: absolute;
+	right: 0;
+	top:0;
+}
+
+#options {
+	position: absolute;
+	right: 0;
+	top: 50px;
+	background-color: #ccc;
+	max-height: 400px;
+	max-width: 400px;
+	visibility: hidden;
+}

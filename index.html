@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
+<head>
+	<meta charset="utf-8" />
+	<title>TP2 - Prog Web avancée</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+	<link rel="stylesheet" href="css/styles.css" media="all" />
+
+	<!-- Script nécessaire à l'exécution de la page ==> Chargement synchrone -->
+	<script src="js/util.js"></script>	
+	<script src="js/async.js"></script>
+	<script src="js/sync.js"></script>
+	
+	
+</head>
+
+<body>
+		<!--
+		Une division servant afficher la carte et occupant 100% de la largeur
+		et de la hauteur de la page ou du "viewport" (appareil mobile).
+	-->
+	<div id="carte-canvas">
+		
+	</div>
+	<img src="images/gear.png" id="boutonOptions"/>
+	<div id="options">
+		<h1>Options d'affichage</h1>
+		<form action="">
+			<input type="checkbox" name="rtc" value="rtc">
+			<label for="rtc">Trajets RTC</label>
+		</form>
+	</div>
+	
+</body>
+</html>
