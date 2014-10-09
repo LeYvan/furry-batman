@@ -71,7 +71,7 @@
 				Id int(11) NOT NULL AUTO_INCREMENT,
 				arrond varchar(25) NOT NULL,
 				batiment varchar(30) NOT NULL,
-				rue int(75) NOT NULL,
+				rue varchar(75) NOT NULL,
 				noCivic varchar(10) NOT NULL,
 				nom varchar(10) NOT NULL,
 				coord_x double NOT NULL,

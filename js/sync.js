@@ -1,5 +1,7 @@
 var listeBornes;
 var listeMarkers = [];
+var infoWindow;
+
 // Indique quels éléments ont déjà été chargés.
 var elementsCharges = {"dom": false, "api-google-map": false, "zap": false};
 window.addEventListener('load',init, false);
@@ -58,6 +60,7 @@ function traitementPostChargement() {
 	reperesZap(listeBornes);
 }
 
+// Afficher/Cacher le pannau d'options
 function showOptions()
 {
 	var panel = $("options");
@@ -71,4 +74,76 @@ function showOptions()
 	}
 }
 
+// Appeller quand click borne.
+function evenementBorneClick()
+{
+	var infoWinow = creerInfoWindowBorne(this);
+	infoWindow.open(carte,this);
+}
 
+// Appeller pour créer fenêtre info borne.
+function creerInfoWindowBorne(marker)
+{
+	var unDiv = document.createElement('div');
+	var unH1 = document.createElement('h1');
+
+	unH1.textContent = marker.borne.nom;
+	unDiv.appendChild(unH1);
+
+	var divInfos = document.createElement('div');
+	unDiv.appendChild(divInfos);
+
+	var spanArrond = document.createElement('p');
+	spanArrond.textContent = "Arrondissement: " + marker.borne.arrond;
+	divInfos.appendChild(spanArrond);
+
+	var spanBatiment = document.createElement('p');
+	spanBatiment.textContent = "Bâtiment: " + marker.borne.batiment;
+	divInfos.appendChild(spanBatiment);
+
+	var spanRue = document.createElement('p');
+	spanRue.textContent = "Rue: " + marker.borne.rue;
+	divInfos.appendChild(spanRue);
+
+	var spanNoCivic = document.createElement('p');
+	spanNoCivic.textContent = "No. Civic: " + marker.borne.noCivic;
+	divInfos.appendChild(spanNoCivic);
+
+	var listeAvis = document.createElement('ul');
+	var liChargement = document.createElement('li');
+	liChargement.id = "chargementAvis";
+	liChargement.textContent = "Chargement des avis...";
+	listeAvis.appendChild(liChargement);
+	unDiv.appendChild(listeAvis);
+
+	var btnVoirPplusDavis = document.createElement('span');
+	btnVoirPplusDavis.style.display = "inline-bloc";
+	btnVoirPplusDavis.style.backgroundColor = 'gray';
+	btnVoirPplusDavis.textContent = "Voir plus d'avis";
+	btnVoirPplusDavis.addEventListener('click',function(){alert("!");});
+	unDiv.appendChild(btnVoirPplusDavis);
+
+	marker.unDiv = unDiv;
+
+	chargerAvisBorne(marker);
+
+	if (typeof infoWindow != "undefined") infoWindow.close();
+
+	infoWindow = new google.maps.InfoWindow({
+		"content": unDiv 
+	});
+	
+	return infoWindow;//.open(carte,this);
+}
+
+function chargerAvisBorne(borne)
+{
+	borne.xhr = new XMLHttpRequest();
+	borne.xhr.onreadystatechange = chargerAvisCallback;
+	borne.xhr.borne = borne;
+
+	var URL = 'http://yvan.wtf/zap-avis.php?action=chercherAvis&borne=' + borne.nom;
+
+	borne.xhr.open('GET', URL, true);
+	borne.xhr.send(null);
+}

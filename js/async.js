@@ -19,8 +19,9 @@ function initCarte() {
 		"center": new google.maps.LatLng(latDefaut, longDefaut)
 		};
 
-	carte = new google.maps.Map(document.getElementById("carte-canvas"), optionsCarte);			
+	carte = new google.maps.Map(document.getElementById("carte-canvas"), optionsCarte);
 }
+
 function verifierPosition()
 {
 	// Est-ce que le navigateur supporte la géolocalisation ?
@@ -77,6 +78,11 @@ function reperesZap(listeBornes)
 						};
 
 		var repere = new google.maps.Marker(optionsRepere);
+
+		repere.borne = listeBornes[borne];
+
+		google.maps.event.addListener(repere,'click',evenementBorneClick);
+	
 		listeMarkers[listeMarkers.length] = repere;
 	}
 
@@ -134,7 +140,7 @@ function chargerZap() {
 	controleurChargement("zap");
 }
 
-// Callback de la requête AJAX qui demande et affiche les informations d'un professeur.
+// Callback de la requête AJAX qui charge les bornes ZAP
 function chargerZapCallback() {
 	// La requête AJAX est-elle complétée (readyState=4) ?
 	if ( xhr.readyState == 4 ) {
@@ -163,6 +169,39 @@ function chargerZapCallback() {
 			} else {
 				//traitement afficher les ZAP
 				listeBornes = objZap.bornes;
+			}
+		}
+	}
+} 
+
+// Callback de la requête AJAX qui demande et affiche les avis sur une borne.
+function chargerAvisCallback() {
+	if ( this.readyState == 4 ) {
+
+		// La requête AJAX est-elle complétée avec succès (status=200) ?
+		if ( this.status != 200 ) {
+			// Affichage du message d'erreur.
+			var msgErreur = 'Erreur (code=' + this.status + '): La requête HTTP n\'a pu être complétée.';
+			//$('msg-erreur').textContent = msgErreur;
+			alert(msgErreur);
+		} else {
+			// Création de l'objet JavaScript à partir de l'expression JSON.
+			// *** Notez l'utilisation de "responseText".
+			try { 
+				objAvis = JSON.parse( this.responseText );
+			} catch (e) {
+				alert('ERREUR: La réponse AJAX n\'est pas une expression JSON valide.');
+				// Fin de la fonction.
+				return;
+			}			// Y a-t-il eu une erreur côté serveur ?
+			if ( objAvis.resultat == "erreur" ) {
+				// Affichage du message d'erreur.
+				var msgErreur = 'Erreur: ' + objAvis.message;
+				//$('msg-erreur').textContent = msgErreur;
+				alert(msgErreur);
+			} else {
+				//traitement afficher les ZAP
+				alert('ajouter les avis dans l\'info window');
 			}
 		}
 	}
