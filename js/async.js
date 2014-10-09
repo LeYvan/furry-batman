@@ -111,6 +111,7 @@ function getCurrentPositionSuccess (position) {
 	//Appel de la fonction du repère
 	repereUsager(position.coords.latitude, position.coords.longitude);
 
+	afficherCerleZoneCouverte(positionInit);
 }
 		
 // Fonction appelée lors de l'échec (refus ou problème) de la récupération de la position.
@@ -120,6 +121,23 @@ function getCurrentPositionError(erreur) {
 	var positionInit = new google.maps.LatLng(latDefaut, longDefaut);
 	// Centrage de la carte sur la bonne coordonnée.
 	carte.setCenter(positionInit);
+}
+
+function afficherCerleZoneCouverte(positionUtilisateur)
+{
+	var cercleZAPoptions = {
+      "strokeColor": '#000066',
+      "strokeOpacity": 0.25,
+      "strokeWeight": 2,
+      "fillColor": '#000088',
+      "fillOpacity": 0.150,
+      "map": carte,
+      "center": positionUtilisateur,
+      "radius": 5000
+    };
+
+    // Add the circle for this city to the map.
+    var cityCircle = new google.maps.Circle(cercleZAPoptions);
 }
 
 function chargerZap() {	
@@ -201,8 +219,46 @@ function chargerAvisCallback() {
 				alert(msgErreur);
 			} else {
 				//traitement afficher les ZAP
-				alert('ajouter les avis dans l\'info window');
+				if (typeof this.marker.avis == "undefined")
+				{
+					this.marker.avis = objAvis.avis;
+				}
+				else
+				{
+					this.marker.avis.concat(objAvis.avis);
+				}
+
+				console.log(this.marker);
+				afficherAvis(this.marker);
 			}
 		}
 	}
-} 
+}
+
+// Ajoute et affiche au maximun 3 avis de plus pour un marker.
+function afficherAvis(marker)
+{
+	var divInfos = marker.divInfoWindow;
+
+	var liChargement = document.getElementById('chargementAvis');
+	liChargement.parentNode.removeChild(liChargement);
+
+	var ulAvis = document.getElementById('ulAvis' + marker.borne.nom);
+
+	var nbAvisAjoute = 0;
+
+	for (var i = 0; i < marker.avis.length && nbAvisAjoute < 3; i++)
+	{
+		var liAvis = document.getElementById("liAvis" + marker.avis[i].Id);
+		if (liAvis === null)
+		{
+			liAvis = document.createElement('li');
+			liAvis.id = "liAvis" + marker.avis[i].Id;
+			liAvis.textContent = marker.avis[i].texte;
+
+			ulAvis.appendChild(liAvis);
+
+			nbAvisAjoute++;
+		}
+	}
+}

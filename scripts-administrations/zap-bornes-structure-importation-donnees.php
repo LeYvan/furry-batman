@@ -70,7 +70,7 @@
 		$strSQL = "CREATE TABLE IF NOT EXISTS bornes (
 				Id int(11) NOT NULL AUTO_INCREMENT,
 				arrond varchar(25) NOT NULL,
-				batiment varchar(30) NOT NULL,
+				batiment varchar(70) NOT NULL,
 				rue varchar(75) NOT NULL,
 				noCivic varchar(10) NOT NULL,
 				nom varchar(10) NOT NULL,

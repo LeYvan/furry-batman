@@ -30,3 +30,82 @@ body
 	max-width: 400px;
 	visibility: hidden;
 }
+
+#infoWindowDiv {
+	overflow-y: auto;
+	width: 25em;
+	height: 25em;
+}
+
+#infoWindowDiv #pArrond::before {
+	padding: 0em;
+	margin: 0em;
+	font-weight: bold;
+	content: "Arrondissement: ";
+}
+
+#infoWindowDiv #pAdresse::before {
+	padding: 0em;
+	margin: 0em;
+	font-weight: bold;
+	content: "Adresse: ";
+}
+
+#infoWindowDiv h1 {
+	padding: 0em;
+	margin: 0em;
+	font-size: 1.5em;	
+}
+
+#infoWindowDiv p {
+	padding: 0em;
+	margin: 0em;
+}
+
+#infoWindowDiv ul {
+	list-style: none;
+	padding: 0em;
+	margin: 0em;
+}
+
+#infoWindowDiv ul li{
+	list-style: none;
+	padding: 0.25em;
+	margin: 0em;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	border-style: dotted;
+	border-width: 1px;
+	border-color: gray;
+}
+
+#chargementAvis {
+	background-position: right;
+	background-repeat: no-repeat;
+	background-image: url('../images/ajax-loader.gif');
+	min-height: 32px;
+	line-height: 32px;
+	vertical-align: middle;
+}
+
+#btnVoirPlusAvis {
+	display: inline-block;
+	margin: 0em;
+	padding: 1em;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	border-style: outset;
+	border-width: 0.125em;
+	background-color: lightgray;
+}
+
+#btnVoirPlusAvis:active {
+	display: inline-block;
+	margin: 0em;
+	padding: 1em;
+	padding-top: 0.5em;
+	padding-bottom: 0.5em;
+	border-style: inset;
+	border-width: 0.125em;
+	background-color: lightgray;
+}

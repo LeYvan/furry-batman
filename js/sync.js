@@ -84,66 +84,65 @@ function evenementBorneClick()
 // Appeller pour créer fenêtre info borne.
 function creerInfoWindowBorne(marker)
 {
-	var unDiv = document.createElement('div');
+	var divInfoWindow = document.createElement('div');
+	divInfoWindow.id = "infoWindowDiv";
 	var unH1 = document.createElement('h1');
 
-	unH1.textContent = marker.borne.nom;
-	unDiv.appendChild(unH1);
+	unH1.textContent = marker.borne.batiment;
+	divInfoWindow.appendChild(unH1);
 
 	var divInfos = document.createElement('div');
-	unDiv.appendChild(divInfos);
+	divInfoWindow.appendChild(divInfos);
 
-	var spanArrond = document.createElement('p');
-	spanArrond.textContent = "Arrondissement: " + marker.borne.arrond;
-	divInfos.appendChild(spanArrond);
+	var pArrond = document.createElement('p');
+	pArrond.id = "pArrond";
+	pArrond.textContent = marker.borne.arrond;
+	divInfos.appendChild(pArrond);
 
-	var spanBatiment = document.createElement('p');
-	spanBatiment.textContent = "Bâtiment: " + marker.borne.batiment;
-	divInfos.appendChild(spanBatiment);
-
-	var spanRue = document.createElement('p');
-	spanRue.textContent = "Rue: " + marker.borne.rue;
-	divInfos.appendChild(spanRue);
-
-	var spanNoCivic = document.createElement('p');
-	spanNoCivic.textContent = "No. Civic: " + marker.borne.noCivic;
-	divInfos.appendChild(spanNoCivic);
+	var pAdresse = document.createElement('p');
+	pAdresse.id ="pAdresse";
+	pAdresse.textContent = marker.borne.noCivic + ' ' + marker.borne.rue;
+	divInfos.appendChild(pAdresse);
 
 	var listeAvis = document.createElement('ul');
+	listeAvis.id = "ulAvis" + marker.borne.nom;
+
 	var liChargement = document.createElement('li');
 	liChargement.id = "chargementAvis";
-	liChargement.textContent = "Chargement des avis...";
+	liChargement.textContent += "Chargement des avis...";
 	listeAvis.appendChild(liChargement);
-	unDiv.appendChild(listeAvis);
+	divInfoWindow.appendChild(listeAvis);
 
 	var btnVoirPplusDavis = document.createElement('span');
-	btnVoirPplusDavis.style.display = "inline-bloc";
-	btnVoirPplusDavis.style.backgroundColor = 'gray';
+	btnVoirPplusDavis.id = "btnVoirPlusAvis"
 	btnVoirPplusDavis.textContent = "Voir plus d'avis";
 	btnVoirPplusDavis.addEventListener('click',function(){alert("!");});
-	unDiv.appendChild(btnVoirPplusDavis);
+	divInfoWindow.appendChild(btnVoirPplusDavis);
 
-	marker.unDiv = unDiv;
+	marker.divInfoWindow = divInfoWindow;
 
 	chargerAvisBorne(marker);
 
 	if (typeof infoWindow != "undefined") infoWindow.close();
 
 	infoWindow = new google.maps.InfoWindow({
-		"content": unDiv 
+		"content": divInfoWindow 
 	});
 	
-	return infoWindow;//.open(carte,this);
+	return infoWindow;
 }
 
-function chargerAvisBorne(borne)
+function chargerAvisBorne(marker)
 {
-	borne.xhr = new XMLHttpRequest();
-	borne.xhr.onreadystatechange = chargerAvisCallback;
-	borne.xhr.borne = borne;
+	var xhrAvis = new XMLHttpRequest();
+	xhrAvis.onreadystatechange = chargerAvisCallback;
 
-	var URL = 'http://yvan.wtf/zap-avis.php?action=chercherAvis&borne=' + borne.nom;
+	// Pour pouvoir récupérer le marker qui a lancé la recherche d'avis
+	// On donne le marker en référence à la requête
+	xhrAvis.marker = marker;
 
-	borne.xhr.open('GET', URL, true);
-	borne.xhr.send(null);
+	var URL = 'http://yvan.wtf/zap-avis.php?action=chercherAvis&borne=' + marker.borne.nom;
+
+	xhrAvis.open('GET', URL, true);
+	xhrAvis.send(null);
 }
