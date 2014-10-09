@@ -115,8 +115,13 @@ function creerInfoWindowBorne(marker)
 
 	var btnVoirPplusDavis = document.createElement('span');
 	btnVoirPplusDavis.id = "btnVoirPlusAvis"
+	btnVoirPplusDavis.marker = marker;
 	btnVoirPplusDavis.textContent = "Voir plus d'avis";
-	btnVoirPplusDavis.addEventListener('click',function(){alert("!");});
+
+	btnVoirPplusDavis.addEventListener('click',function(){
+		chargerAvisBorne(this.marker);
+	});
+
 	divInfoWindow.appendChild(btnVoirPplusDavis);
 
 	marker.divInfoWindow = divInfoWindow;
@@ -125,10 +130,9 @@ function creerInfoWindowBorne(marker)
 
 	if (typeof infoWindow != "undefined") infoWindow.close();
 
-	infoWindow = new google.maps.InfoWindow({
-		"content": divInfoWindow 
-	});
-	
+	infoWindow = new google.maps.InfoWindow();
+	infoWindow.setContent(divInfoWindow);
+
 	return infoWindow;
 }
 
@@ -141,8 +145,24 @@ function chargerAvisBorne(marker)
 	// On donne le marker en référence à la requête
 	xhrAvis.marker = marker;
 
-	var URL = 'http://yvan.wtf/zap-avis.php?action=chercherAvis&borne=' + marker.borne.nom;
+	var strURL = 'http://yvan.wtf/zap-avis.php?action=chercherAvis&borne=' + marker.borne.nom;
 
-	xhrAvis.open('GET', URL, true);
+	if (typeof marker.avis != "undefined")
+	{
+		var strDejaCharge = "&dejaChargee="
+
+		for (i in marker.avis)
+		{
+			strDejaCharge += marker.avis[i].Id;
+			if (i < marker.avis.length - 1)
+			{
+				strDejaCharge += ',';
+			}
+		}
+		
+		strURL += strDejaCharge;	
+	}
+
+	xhrAvis.open('GET', strURL, true);
 	xhrAvis.send(null);
 }

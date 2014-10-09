@@ -208,7 +208,7 @@ function chargerAvisCallback() {
 			try { 
 				objAvis = JSON.parse( this.responseText );
 			} catch (e) {
-				alert('ERREUR: La réponse AJAX n\'est pas une expression JSON valide.');
+				alert('ERREUR: La réponse AJAX n\'est pas une expression JSON valide:\r\n' + this.responseText);
 				// Fin de la fonction.
 				return;
 			}			// Y a-t-il eu une erreur côté serveur ?
@@ -228,8 +228,16 @@ function chargerAvisCallback() {
 					this.marker.avis.concat(objAvis.avis);
 				}
 
-				console.log(this.marker);
+				if (objAvis.avis.length === 0) {
+					var	btnVoirPlusAvis = document.getElementById('btnVoirPlusAvis');
+					btnVoirPlusAvis.style.visibility = 'collapse';
+
+					var ulAvis = document.getElementById('ulAvis' + this.marker.borne.nom);
+					ulAvis.style.height = '75%';
+				}
+				
 				afficherAvis(this.marker);
+
 			}
 		}
 	}
@@ -241,7 +249,10 @@ function afficherAvis(marker)
 	var divInfos = marker.divInfoWindow;
 
 	var liChargement = document.getElementById('chargementAvis');
-	liChargement.parentNode.removeChild(liChargement);
+	if (liChargement != null)
+	{
+		liChargement.parentNode.removeChild(liChargement);
+	}
 
 	var ulAvis = document.getElementById('ulAvis' + marker.borne.nom);
 
@@ -257,6 +268,8 @@ function afficherAvis(marker)
 			liAvis.textContent = marker.avis[i].texte;
 
 			ulAvis.appendChild(liAvis);
+
+			divInfos.scrollTop = divInfos.scrollHeight;
 
 			nbAvisAjoute++;
 		}

@@ -5,10 +5,12 @@ require "param-bd.inc";
 class ListeAvis 
 {
 	public $objConnexion;
-	public $sql_listerAvis = "SELECT * FROM avis WHERE nom=:borne;";
+	public $sql_listerAvis = "SELECT * FROM avis WHERE nom=:borne";
 	//public $sql_posterAvis = "INSERT INTO avis (nom,texte) VALUES (:borne, @texte);";
 
 	public $avis;
+
+	public $strSQL;
 
 	/* ===========================================================================
 		Méthode: connexion
@@ -45,15 +47,26 @@ class ListeAvis
 		Description: Récupérer une liste d'avis de la BD selon le nom de 
 			     borne passé en paramètre.
 	*/
-	public function __construct($borne)
+	public function __construct($borne, $filtre)
 	{
 		$this->connexion();
 		$this->avis = array();
 
 		try 
 		{
-			$req = $this->objConnexion->prepare($this->sql_listerAvis);
-			$req->execute(array(':borne' => $borne));
+			if (strlen($filtre) > 0)
+			{
+				$req = $this->preparerFiltre($this->objConnexion,$filtre);
+			}
+			else
+			{
+				$req = $this->objConnexion->prepare($this->sql_listerAvis);
+			}
+			
+			$req->bindParam(':borne', $borne);
+
+			$req->execute();
+
 			$req->setFetchMode(PDO::FETCH_OBJ);
 
 			while ($unAvis = $req->fetch())
@@ -62,10 +75,44 @@ class ListeAvis
 			}
 		} 
 		catch (PDOException $e) {
-			throw new Exception("Requête à la BD impossible: " . $e->getMessage());
+			$test = new Exception("Requête à la BD impossible: " . $e->getMessage());
+			$test->debugObjet = $this;
+			throw $test;
 		}
 	}
 	//=========================================================================
+
+
+	private function preparerFiltre($objCon, $filtre)
+	{
+		$strSQL = $this->sql_listerAvis . " AND Id NOT IN (";
+
+		$lesFiltres = explode(",",$filtre);
+
+		for ($i = 0; $i < count($lesFiltres); $i++)
+		{
+			$strSQL = $strSQL . ":filtre_" . $lesFiltres[$i] . " ";
+			if ($i < count($lesFiltres) - 1)
+			{
+				$strSQL = $strSQL . ", ";
+			}
+		}
+
+		$strSQL = $strSQL . ")";
+
+		$req = $objCon->prepare($strSQL);
+
+		for ($i = 0; $i < count($lesFiltres); $i++)
+		{
+			$strNomFiltre = ":filtre_" . $lesFiltres[$i];
+
+			$req->bindParam($strNomFiltre, $lesFiltres[$i]);
+		}
+
+		
+		return $req;
+	}
+
 
 	/*
 		Méthode: getAllAvis

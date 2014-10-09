@@ -32,7 +32,6 @@ body
 }
 
 #infoWindowDiv {
-	overflow-y: auto;
 	width: 25em;
 	height: 25em;
 }
@@ -63,9 +62,12 @@ body
 }
 
 #infoWindowDiv ul {
+	overflow-y: auto;
+	height: 60%;
 	list-style: none;
-	padding: 0em;
-	margin: 0em;
+	padding: 0.25em;
+	margin-top: 0.25em;
+	margin-bottom: 0.25em;
 }
 
 #infoWindowDiv ul li{
@@ -92,6 +94,7 @@ body
 	display: inline-block;
 	margin: 0em;
 	padding: 1em;
+	margin-top: 0.25em;
 	padding-top: 0.5em;
 	padding-bottom: 0.5em;
 	border-style: outset;

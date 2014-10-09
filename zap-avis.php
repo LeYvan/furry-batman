@@ -1,6 +1,6 @@
 <?php	
 
-	error_reporting(0);
+	error_reporting(E_ERROR);
 
 	if (isset($argv[1]) && $argv[1] == 'debug')
 	{
@@ -8,12 +8,12 @@
 		{
 			$_GET['action'] = 'chercherAvis';
 			$_GET['borne'] = $argv[3];
-			print("Debug mode ON:\r\n");
-			print_r($_GET);
+
+			$_GET['dejaChargee'] = $argv[4];
 		}
 	}
 
-	require("./include/ListeAvis.php");
+	require("./include/listeAvis.php");
 
 	try
 	{
@@ -41,7 +41,14 @@
 		$objJSON->resultat = "ok";
 		$objJSON->borne = $borne;
 
-		$avis = new ListeAvis($borne);
+		$strFiltre = "";
+
+		if (isset($_GET['dejaChargee']))
+		{
+			$strFiltre = $_GET['dejaChargee'];
+		}
+
+		$avis = new ListeAvis($borne,$strFiltre);
 		$objJSON->avis = $avis->getAllAvis();
 
 		print(json_encode($objJSON,JSON_UNESCAPED_UNICODE));
