@@ -1,9 +1,7 @@
 Côté client:
 
 	Les avis
-		Les afficher
 		En ajouter (REQUËTE POST)
-		Générer des avis bidon
 
 	Les arrondissements
 		Les récupérer d'un script PHP en XML
@@ -16,7 +14,6 @@ Côté serveur:
 
 	Les avis
 		INSERT dans la table
-		SELECT dabs la table
 
 	Les arrondissement
 		RÉCUPÉRER le fichier XML de la ville
