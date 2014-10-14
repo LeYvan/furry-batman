@@ -8,9 +8,9 @@ window.addEventListener('load',init, false);
 
 chargerZap();
 
-function init()
-{
+function init(){
 	$("boutonOptions").addEventListener('click', showOptions, false);
+	$("rtc").addEventListener('change', showRTC, false);
 	$("options").style.visibility = "hidden";
 }
 
@@ -61,29 +61,24 @@ function traitementPostChargement() {
 }
 
 // Afficher/Cacher le pannau d'options
-function showOptions()
-{
+function showOptions(){
 	var panel = $("options");
-	if(panel.style.visibility == "hidden")
-	{
+	if(panel.style.visibility == "hidden"){
 		panel.style.visibility = "visible";
 	}
-	else
-	{
+	else{
 		panel.style.visibility = "hidden";
 	}
 }
 
 // Appeller quand click borne.
-function evenementBorneClick()
-{
+function evenementBorneClick(){
 	var infoWinow = creerInfoWindowBorne(this);
 	infoWindow.open(carte,this);
 }
 
 // Appeller pour créer fenêtre info borne.
-function creerInfoWindowBorne(marker)
-{
+function creerInfoWindowBorne(marker){
 	var divInfoWindow = document.createElement('div');
 	divInfoWindow.id = "infoWindowDiv";
 	var unH1 = document.createElement('h1');
@@ -136,8 +131,7 @@ function creerInfoWindowBorne(marker)
 	return infoWindow;
 }
 
-function chargerAvisBorne(marker)
-{
+function chargerAvisBorne(marker){
 	var xhrAvis = new XMLHttpRequest();
 	xhrAvis.onreadystatechange = chargerAvisCallback;
 
@@ -147,15 +141,12 @@ function chargerAvisBorne(marker)
 
 	var strURL = 'http://yvan.wtf/zap-avis.php?action=chercherAvis&borne=' + marker.borne.nom;
 
-	if (typeof marker.avis != "undefined")
-	{
+	if (typeof marker.avis != "undefined"){
 		var strDejaCharge = "&dejaChargee="
 
-		for (i in marker.avis)
-		{
+		for (i in marker.avis){
 			strDejaCharge += marker.avis[i].Id;
-			if (i < marker.avis.length - 1)
-			{
+			if (i < marker.avis.length - 1){
 				strDejaCharge += ',';
 			}
 		}
@@ -166,3 +157,20 @@ function chargerAvisBorne(marker)
 	xhrAvis.open('GET', strURL, true);
 	xhrAvis.send(null);
 }
+
+function showRTC(e){
+	var rtcLayer = new google.maps.KmlLayer({
+										    	url: './include/rtc-trajets.kml'
+										    	//url: 'http://gmaps-samples.googlecode.com/svn/trunk/ggeoxml/cta.kml'
+										  		});
+	if(e.target.checked){
+  		rtcLayer.setMap(carte);
+	}
+	else{
+		rtcLayer.setMap(null);
+	}
+
+}
+
+
+

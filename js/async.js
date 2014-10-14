@@ -38,8 +38,7 @@ function verifierPosition()
 		}	
 }
 
-function repereUsager(lati, longi)
-{
+function repereUsager(lati, longi){
 	// Position du repère.
 	var posRepere = new google.maps.LatLng(lati , longi);
 	posUsager = posRepere;
@@ -59,8 +58,7 @@ function repereUsager(lati, longi)
 
 }
 
-function reperesZap(listeBornes)
-{
+function reperesZap(listeBornes){
 	var distance; 
 	var image;
 
@@ -170,8 +168,6 @@ function chargerZapCallback() {
 			//$('msg-erreur').textContent = msgErreur;
 			
 		} else {
-			// Création de l'objet JavaScript à partir de l'expression JSON.
-			// *** Notez l'utilisation de "responseText".
 			try { 
 				objZap = JSON.parse( xhr.responseText );
 			} catch (e) {
@@ -219,12 +215,10 @@ function chargerAvisCallback() {
 				alert(msgErreur);
 			} else {
 				//traitement afficher les ZAP
-				if (typeof this.marker.avis == "undefined")
-				{
+				if (typeof this.marker.avis == "undefined"){
 					this.marker.avis = objAvis.avis;
 				}
-				else
-				{
+				else{
 					this.marker.avis.concat(objAvis.avis);
 				}
 
@@ -244,13 +238,11 @@ function chargerAvisCallback() {
 }
 
 // Ajoute et affiche au maximun 3 avis de plus pour un marker.
-function afficherAvis(marker)
-{
+function afficherAvis(marker){
 	var divInfos = marker.divInfoWindow;
 
 	var liChargement = document.getElementById('chargementAvis');
-	if (liChargement != null)
-	{
+	if (liChargement != null){
 		liChargement.parentNode.removeChild(liChargement);
 	}
 
@@ -258,11 +250,9 @@ function afficherAvis(marker)
 
 	var nbAvisAjoute = 0;
 
-	for (var i = 0; i < marker.avis.length && nbAvisAjoute < 3; i++)
-	{
+	for (var i = 0; i < marker.avis.length && nbAvisAjoute < 3; i++){
 		var liAvis = document.getElementById("liAvis" + marker.avis[i].Id);
-		if (liAvis === null)
-		{
+		if (liAvis === null){
 			liAvis = document.createElement('li');
 			liAvis.id = "liAvis" + marker.avis[i].Id;
 			liAvis.textContent = marker.avis[i].texte;
