@@ -6,6 +6,7 @@ class ListeAvis
 {
 	public $objConnexion;
 	public $sql_listerAvis = "SELECT * FROM avis WHERE nom=:borne";
+	public $sql_listerAvisFin = "";//" LIMIT 3";
 	//public $sql_posterAvis = "INSERT INTO avis (nom,texte) VALUES (:borne, @texte);";
 
 	public $avis;
@@ -60,7 +61,7 @@ class ListeAvis
 			}
 			else
 			{
-				$req = $this->objConnexion->prepare($this->sql_listerAvis);
+				$req = $this->objConnexion->prepare($this->sql_listerAvis . $this->sql_listerAvisFin);
 			}
 			
 			$req->bindParam(':borne', $borne);
@@ -98,7 +99,7 @@ class ListeAvis
 			}
 		}
 
-		$strSQL = $strSQL . ")";
+		$strSQL = $strSQL . ")" . $this->sql_listerAvisFin;
 
 		$req = $objCon->prepare($strSQL);
 
