@@ -1,22 +1,35 @@
 var listeBornes;
 var listeMarkers = [];
 var infoWindow;
-
+var listePolygones = [];
+var listeArrond = [];
+var listeCouleur = ["red", "blue", "yellow", "green", "orange", "purple", "black"];
 // Indique quels éléments ont déjà été chargés.
-var elementsCharges = {"dom": false, "api-google-map": false, "zap": false};
+var elementsCharges = {"dom": false, "api-google-map": false, "zap": false, "arrond":false};
 window.addEventListener('load',init, false);
 
 chargerZap();
+chargerArrondissement();
 
+/* ===========================================================================
+	Fonction: init
+	Description: Fonction init de base de la page.
+*/
 function init(){
 	$("boutonOptions").addEventListener('click', showOptions, false);
-	$("rtc").addEventListener('change', showRTC, false);
 	$("options").style.visibility = "hidden";
+
+	var chkBox = document.getElementsByTagName("input");
+
+	for (var i = 0; i < chkBox.length; i++) {
+		chkBox[i].addEventListener('change', gestionClickOptions, false);
+	};
 }
 
-
-
-// Fonction contrôlant le chargement asynchrone de divers éléments.
+/* ===========================================================================
+	Fonction: controleurChargement
+	Description: Contrôle le chargement asynchrone de divers éléments.
+*/
 function controleurChargement(nouvElemCharge) {
 	console.log('controleurChargement: Nouvel élément chargé "' + nouvElemCharge + '".');
 	if (typeof elementsCharges[nouvElemCharge] != "undefined") {
@@ -45,13 +58,19 @@ window.addEventListener('DOMContentLoaded', function() {
 		chargerScriptAsync('https://maps.googleapis.com/maps/api/js?sensor=true&libraries=geometry&callback=apiGoogleMapCharge', null);
 		}, false);
 
-// Fonction appelée pour indiquer que l'API Google Map est chargé.
+/* ===========================================================================
+	Fonction: apiGoogleMapCharge
+	Description: Indique que l'API Google Map est chargé.
+*/
 function apiGoogleMapCharge() {
 	console.log('API Google Map chargé.');
 	controleurChargement("api-google-map");
 }
 
-// Fonction responsable des traitements post-chargement.
+/* ===========================================================================
+	Fonction: traitementPostChargement
+	Description: Responsable des traitements post-chargement.
+*/
 function traitementPostChargement() {
 	console.log('Traitement post-chargement.');
 
@@ -60,7 +79,10 @@ function traitementPostChargement() {
 	reperesZap(listeBornes);
 }
 
-// Afficher/Cacher le pannau d'options
+/* ===========================================================================
+	Fonction: showOptions
+	Description: Afficher/Cacher le pannau d'options
+*/
 function showOptions(){
 	var panel = $("options");
 	if(panel.style.visibility == "hidden"){
@@ -71,13 +93,19 @@ function showOptions(){
 	}
 }
 
-// Appeller quand click borne.
+/* ===========================================================================
+	Fonction: evenementBorneClick
+	Description: Affiche les infoWindows lors d'un clic sur une ZAP.
+*/
 function evenementBorneClick(){
 	var infoWinow = creerInfoWindowBorne(this);
 	infoWindow.open(carte,this);
 }
 
-// Appeller pour créer fenêtre info borne.
+/* ===========================================================================
+	Fonction: creerInfoWindowBorne
+	Description: Création d'une infoWindow pour afficher les avis.
+*/
 function creerInfoWindowBorne(marker){
 	var divInfoWindow = document.createElement('div');
 	divInfoWindow.id = "infoWindowDiv";
@@ -131,12 +159,16 @@ function creerInfoWindowBorne(marker){
 	return infoWindow;
 }
 
+/* ===========================================================================
+	Fonction: chargerAvisBorne
+	Description: Chargement des avis.
+*/
 function chargerAvisBorne(marker){
 	var xhrAvis = new XMLHttpRequest();
 	xhrAvis.onreadystatechange = chargerAvisCallback;
 
-	// Pour pouvoir récupérer le marker qui a lancé la recherche d'avis
-	// On donne le marker en référence à la requête
+	// Pour pouvoir récupérer le marker qui a lancé la recherche d'avis,
+	// on donne le marker en référence à la requête.
 	xhrAvis.marker = marker;
 
 	var strURL = 'http://yvan.wtf/zap-avis.php?action=chercherAvis&borne=' + marker.borne.nom;
@@ -158,11 +190,15 @@ function chargerAvisBorne(marker){
 	xhrAvis.send(null);
 }
 
+/* ===========================================================================
+	Fonction: showRTC
+	Description: Affiche le layer des trajets RTC.
+*/
 function showRTC(e){
 	var rtcLayer = new google.maps.KmlLayer({
-										    	url: './include/rtc-trajets.kml'
-										    	//url: 'http://gmaps-samples.googlecode.com/svn/trunk/ggeoxml/cta.kml'
-										  		});
+										    url: 'http://yvan.wtf/include/rtc-trajets.kml'
+										    //url: 'http://gmaps-samples.googlecode.com/svn/trunk/ggeoxml/cta.kml'
+										  	});
 	if(e.target.checked){
   		rtcLayer.setMap(carte);
 	}
@@ -171,6 +207,105 @@ function showRTC(e){
 	}
 
 }
+
+/* ===========================================================================
+	Fonction: polygoneArrond
+	Description: Création des polygones des arrondissements si la requête HTTP 
+				 a fonctionnée.
+*/	
+function polygoneArrond(){		
+ 	var i;
+ 	
+ 	var polygone;
+
+ 	for (i = 0; i < listeArrond.length; i++) {
+ 		var coordsTemp = [];
+ 		var coordsPoly = [];
+
+ 		coordsTemp = listeArrond[i].polygone.split(',');
+ 		
+ 		for (var j = 0; j < coordsTemp.length; j++) {
+ 			var paireCoord = coordsTemp[j].split(' ');
+ 				coordsPoly[j] = new google.maps.LatLng(paireCoord[1], paireCoord[0]); 			
+ 		}
+
+ 		nom = listeArrond[i].abreviation.textContent;
+
+ 		polygone = new google.maps.Polygon({
+ 			paths: coordsPoly,
+ 			strokeColor: listeCouleur[i],
+ 			strokeOpacity: 0.8,
+ 			strokeWeight: 2,
+ 			fillColor : listeCouleur[i],
+ 			fillOpacity : 0.35
+ 		});
+
+ 		listePolygones[i] = {"nom": nom, "polygone": polygone};
+ 	}
+}
+
+/* ===========================================================================
+	Fonction: gestionClickOptions
+	Description: Gestionnaire du clic des options d'affichage.
+*/	
+function gestionClickOptions(e){
+	if(e.target.id == "all"){
+		gererArrondSelect(e.target.checked)
+	}else if(e.target.id == "rtc"){
+		showRTC(e);
+	}else {
+		afficherCacherArrond(e.target.id, e.target.checked);
+	}
+}
+
+/* ===========================================================================
+	Fonction: getArrondissement
+	Description: Rechercher et retourne un arrondissement selon son id.
+*/	
+function getArrondissement(id){
+	var i = 0;
+	while(i < listePolygones.length){
+		if(listePolygones[i].nom == id){
+			return listePolygones[i].polygone;
+		}
+		i++;
+	}
+	return null;
+}
+
+/* ===========================================================================
+	Fonction: afficherCacherArrond
+	Description: Affiche ou cache un arrondissement sur la carte selon le 
+				 statut du checkbox.
+*/	
+function afficherCacherArrond(id,status){
+	if(status){
+		getArrondissement(id).setMap(carte);
+	}
+	else
+	{
+		getArrondissement(id).setMap(null);
+	}
+
+}
+
+/* ===========================================================================
+	Fonction: gererArrondSelect
+	Description: Gestion de l'affichage de tous les arrondissement en même 
+				 temps.
+*/	
+function gererArrondSelect(status){
+	var afficherCacher = false;
+	if(status){
+		afficherCacher = true;
+	}
+
+	for(var i = 0; i < listePolygones.length; i++){
+		$(listePolygones[i].nom).checked = afficherCacher;
+		afficherCacherArrond(listePolygones[i].nom, afficherCacher);
+	}
+}
+
 
 
 

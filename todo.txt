@@ -1,14 +1,14 @@
 Côté client:
 
 	Les avis
-		En ajouter (REQUËTE POST)
+		En ajouter (REQUÊTE POST)
 
 	Les arrondissements
-		Les récupérer d'un script PHP en XML
-		Afficher les polygones dans MAPS
+		Les récupérer d'un script PHP en XML *DONE
+		Afficher les polygones dans MAPS *DONE
 
 	Les trajets RTC
-		Afficher le fichier KML du TP1 dans MAPS
+		Afficher le fichier KML du TP1 dans MAPS *MARCHE PAS ENCORE
 
 Côté serveur:
 
@@ -16,5 +16,5 @@ Côté serveur:
 		INSERT dans la table
 
 	Les arrondissement
-		RÉCUPÉRER le fichier XML de la ville
-		Renvoyer les polygones dans un format XML custom
+		RÉCUPÉRER le fichier XML de la ville *DONE
+		Renvoyer les polygones dans un format XML custom *DONE

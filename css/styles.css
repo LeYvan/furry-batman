@@ -112,3 +112,6 @@ body
 	border-width: 0.125em;
 	background-color: lightgray;
 }
+#options div{
+	display: block;
+}

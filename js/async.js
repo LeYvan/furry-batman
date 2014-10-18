@@ -1,16 +1,18 @@
-// Référence à la carte Google (variable globale).
 var carte;
 var posUsager;
 var listeMarkers = [];
-
+var xhrZap;
+var xhrArrond;
 // Position par défaut (Québec).
 var latDefaut = 46.803320;
 var longDefaut = -71.242773;
 
-// Fonction responsable de charger la carte.
+
+/* ===========================================================================
+	Fonction: initCarte
+	Description: Chargement de la carte.
+*/
 function initCarte() {
-			
-	// Object JSON pour les options de la carte.
 	var optionsCarte = {
 		"zoom": 12,
 		"mapTypeId": google.maps.MapTypeId.ROADMAP,
@@ -22,27 +24,29 @@ function initCarte() {
 	carte = new google.maps.Map(document.getElementById("carte-canvas"), optionsCarte);
 }
 
-function verifierPosition()
-{
-	// Est-ce que le navigateur supporte la géolocalisation ?
+/* ===========================================================================
+	Fonction: verifierPosition
+	Description: Vérifie si la géolocation est disponible. Si oui, une autre
+				 fonction est appelée pour la récupérer.
+*/
+function verifierPosition(){
 	if ( typeof navigator.geolocation != "undefined" ) {
 		console.log('Le navigateur supporte la géolocalisation.');
 		navigator.geolocation.getCurrentPosition(getCurrentPositionSuccess, getCurrentPositionError, {});
 		} else {
-			// Pas de support de la géolocalisation.
 			console.log('Le navigateur NE supporte PAS la géolocalisation.');
-			// Utilisation de la position par défaut.
 			var positionInit = new google.maps.LatLng(latDefaut, longDefaut);
-			// Centrage de la carte sur la bonne coordonnée.
 			carte.setCenter(positionInit);
 		}	
 }
 
+/* ===========================================================================
+	Fonction: repereUsager
+	Description: Création du repère de l'usager sur la carte.
+*/
 function repereUsager(lati, longi){
-	// Position du repère.
 	var posRepere = new google.maps.LatLng(lati , longi);
 	posUsager = posRepere;
-
 
 	var optionsRepere = {
 						"position": posRepere, 
@@ -53,18 +57,20 @@ function repereUsager(lati, longi){
 					};
 	var repere = new google.maps.Marker(optionsRepere);
 
-	filtrerZap();
-	
-
+	filtrerZap();	
 }
 
+/* ===========================================================================
+	Fonction: reperesZap
+	Description: Création des repères pour les ZAP sur la carte à partir de la
+				 liste des bornes.
+*/
 function reperesZap(listeBornes){
 	var distance; 
 	var image;
 
 	for (borne in listeBornes){	
 
-		// Position du repère.
 		var posRepere = new google.maps.LatLng(listeBornes[borne].coord_y , listeBornes[borne].coord_x);
 
 		var optionsRepere = {
@@ -83,8 +89,13 @@ function reperesZap(listeBornes){
 	
 		listeMarkers[listeMarkers.length] = repere;
 	}
-
 }
+
+/* ===========================================================================
+	Fonction: filtrerZap
+	Description: Filtre les ZAP pour mettre en évidence celles qui sont dans 
+				 un rayon de 5 km de l'usager.
+*/
 function filtrerZap(){
 	for (var i = 0; i < listeMarkers.length; i++) {
 		var distance = google.maps.geometry.spherical.computeDistanceBetween(listeMarkers[i].position, posUsager);
@@ -98,31 +109,38 @@ function filtrerZap(){
 	};
 }
 
-// Fonction appelée lors du succès de la récupération de la position.
+/* ===========================================================================
+	Fonction: getCurrentPositionSuccess
+	Description: Récupère la position de l'usager si la géolocalisation est 
+				 supportée.
+*/
 function getCurrentPositionSuccess (position) {	
-	// Utilisation de la position de l'utilisateur.
 	console.log('Position obtenue : ' + position.coords.latitude + ', ' + position.coords.longitude);
 	var positionInit = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-	// Centrage de la carte sur la bonne coordonnée.
+
 	carte.setCenter(positionInit);
 
-	//Appel de la fonction du repère
 	repereUsager(position.coords.latitude, position.coords.longitude);
-
 	afficherCerleZoneCouverte(positionInit);
 }
-		
-// Fonction appelée lors de l'échec (refus ou problème) de la récupération de la position.
+
+/* ===========================================================================
+	Fonction: getCurrentPositionError
+	Description: Appelée lors de l'échec (refus ou problème) de la récupération 
+				 de la position. Utilisation de la position par défaut.
+*/	
 function getCurrentPositionError(erreur) {	
-	// Utilisation de la position par défaut.
 	console.log('Utilisation de la position par défaut.');
 	var positionInit = new google.maps.LatLng(latDefaut, longDefaut);
-	// Centrage de la carte sur la bonne coordonnée.
 	carte.setCenter(positionInit);
 }
 
-function afficherCerleZoneCouverte(positionUtilisateur)
-{
+/* ===========================================================================
+	Fonction: afficherCerleZoneCouverte
+	Description: Affiche un cercle sur la carteautour de la position de 
+				 l'usager.
+*/	
+function afficherCerleZoneCouverte(positionUtilisateur){
 	var cercleZAPoptions = {
       "strokeColor": '#000066',
       "strokeOpacity": 0.25,
@@ -134,87 +152,126 @@ function afficherCerleZoneCouverte(positionUtilisateur)
       "radius": 5000
     };
 
-    // Add the circle for this city to the map.
     var cityCircle = new google.maps.Circle(cercleZAPoptions);
 }
 
+/* ===========================================================================
+	Fonction: chargerZap
+	Description: Chargement des ZAP à l'aide d'une requête AJAX.
+*/	
 function chargerZap() {	
-	// Création de l'objet XMLHttpRequest.
-	xhr = new XMLHttpRequest();
-	// Fonction JavaScript à exécuter lorsque l'état de la requête HTTP change.
-	xhr.onreadystatechange = chargerZapCallback;
+	xhrZap = new XMLHttpRequest();
+	xhrZap.onreadystatechange = chargerZapCallback;
 	
-	// URL pour la requête HTTP avec AJAX (inclut le paramètre).
 	var URL = 'http://yvan.wtf/zap-bornes.php?action=chercherBornes';
+	xhrZap.open('GET', URL, true);
 	
-	// Préparation de la requête HTTP-GET en mode asynchrone (true).
-	xhr.open('GET', URL, true);
-	
-
-	xhr.send(null);
-
+	xhrZap.send(null);
 	controleurChargement("zap");
 }
 
-// Callback de la requête AJAX qui charge les bornes ZAP
+/* ===========================================================================
+	Fonction: chargerZapCallback
+	Description: Callback de la requête AJAX qui charge les ZAP.
+*/	
 function chargerZapCallback() {
-	// La requête AJAX est-elle complétée (readyState=4) ?
-	if ( xhr.readyState == 4 ) {
+	if ( xhrZap.readyState == 4 ) {
 		
-		// La requête AJAX est-elle complétée avec succès (status=200) ?
-		if ( xhr.status != 200 ) {
-			// Affichage du message d'erreur.
-			var msgErreur = 'Erreur (code=' + xhr.status + '): La requête HTTP n\'a pu être complétée.';
+		if ( xhrZap.status != 200 ) {
+			var msgErreur = 'Erreur (code=' + xhrZap.status + '): La requête HTTP n\'a pu être complétée.';
 			//$('msg-erreur').textContent = msgErreur;
 			
 		} else {
+			var objZap;
 			try { 
-				objZap = JSON.parse( xhr.responseText );
+				objZap = JSON.parse( xhrZap.responseText );
 			} catch (e) {
 				alert('ERREUR: La réponse AJAX n\'est pas une expression JSON valide.');
-				// Fin de la fonction.
 				return;
-			}			// Y a-t-il eu une erreur côté serveur ?
+			}
 			if ( objZap.resultat == "erreur" ) {
-				// Affichage du message d'erreur.
 				var msgErreur = 'Erreur: ' + objZap.message;
 				//$('msg-erreur').textContent = msgErreur;
 				
 			} else {
-				//traitement afficher les ZAP
 				listeBornes = objZap.bornes;
 			}
 		}
 	}
 } 
 
-// Callback de la requête AJAX qui demande et affiche les avis sur une borne.
+/* ===========================================================================
+	Fonction: chargerArrondissement
+	Description: Chargement des arrondissements à l'aide d'une requête AJAX.
+*/	
+function chargerArrondissement(){
+	xhrArrond = new XMLHttpRequest();
+	xhrArrond.onreadystatechange = chargerArrondCallback;
+	
+	var URL = 'http://yvan.wtf/zap-arrond.php?action=lister';
+	xhrArrond.open('GET', URL, true);
+	
+	xhrArrond.send(null);
+	controleurChargement("arrond");
+}
+
+/* ===========================================================================
+	Fonction: chargerArrondCallback
+	Description: Callback de la requête AJAX qui charge les arrondissements.
+*/	
+function chargerArrondCallback() {
+	if ( xhrArrond.readyState == 4 ) {
+		
+		if ( xhrArrond.status != 200 ) {
+			var msgErreur = 'Erreur (code=' + xhrArrond.status + '): La requête HTTP n\'a pu être complétée.';
+			//$('msg-erreur').textContent = msgErreur;
+			
+		} else {
+			// Document XML retourné.
+			var docXML = xhrArrond.responseXML;
+			var racineXML = docXML.documentElement;
+			var i=0;
+			var arrond;
+			var coordsTemp;
+			while(i < racineXML.children.length){
+				arrond = racineXML.children[i];
+				coordsTemp = arrond.lastElementChild.textContent;
+				var coords = coordsTemp.substring(coordsTemp.indexOf('-'),coordsTemp.length - 2);
+
+				listeArrond[i] = {"nom": arrond.children[1],
+								"abreviation": arrond.children[2],
+							   	"polygone":coords};
+				i++;
+			}
+			polygoneArrond();
+		}
+	}
+} 
+
+/* ===========================================================================
+	Fonction: chargerAvisCallback
+	Description: Callback de la requête AJAX qui demande et affiche les
+				 avis pour une ZAP.
+*/	
 function chargerAvisCallback() {
 	if ( this.readyState == 4 ) {
-
-		// La requête AJAX est-elle complétée avec succès (status=200) ?
 		if ( this.status != 200 ) {
-			// Affichage du message d'erreur.
 			var msgErreur = 'Erreur (code=' + this.status + '): La requête HTTP n\'a pu être complétée.';
 			//$('msg-erreur').textContent = msgErreur;
 			alert(msgErreur);
 		} else {
-			// Création de l'objet JavaScript à partir de l'expression JSON.
-			// *** Notez l'utilisation de "responseText".
+
 			try { 
 				objAvis = JSON.parse( this.responseText );
 			} catch (e) {
 				alert('ERREUR: La réponse AJAX n\'est pas une expression JSON valide:\r\n' + this.responseText);
-				// Fin de la fonction.
 				return;
-			}			// Y a-t-il eu une erreur côté serveur ?
+			}			
 			if ( objAvis.resultat == "erreur" ) {
-				// Affichage du message d'erreur.
 				var msgErreur = 'Erreur: ' + objAvis.message;
 				//$('msg-erreur').textContent = msgErreur;
 				alert(msgErreur);
 			} else {
-				//traitement afficher les ZAP
 				if (typeof this.marker.avis == "undefined"){
 					this.marker.avis = objAvis.avis;
 				}
@@ -231,13 +288,15 @@ function chargerAvisCallback() {
 				}
 				
 				afficherAvis(this.marker);
-
 			}
 		}
 	}
 }
 
-// Ajoute et affiche au maximun 3 avis de plus pour un marker.
+/* ===========================================================================
+	Fonction: afficherAvis
+	Description: Ajoute et affiche au maximun 3 avis de plus pour un marker.
+*/	
 function afficherAvis(marker){
 	var divInfos = marker.divInfoWindow;
 
