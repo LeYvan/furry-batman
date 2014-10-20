@@ -103,6 +103,56 @@ function evenementBorneClick(){
 }
 
 /* ===========================================================================
+	Fonction: creeInfoWindowAjouterAvis
+	Description: Affiche une infoWIndow pour ajouter une avis.
+*/
+function creeInfoWindowAjouterAvis(marker){
+	var divInfoWindow = document.createElement('div');
+	divInfoWindow.id = "infoWindowDiv";
+
+	var frmAvis = document.createElement('form');
+	frmAvis.action = 'zap-avis.php';
+	frmAvis.method = 'post';
+
+	var h1Titre = document.createElement('h1');
+	h1Titre.textContent = 'Ajouter un avis';
+
+	var txtAvis = document.createElement('textarea');
+	txtAvis.id = 'txtAvis';
+
+	var lblAvis = document.createElement('lblAvis');
+	lblAvis.textContent = 'Avis:';
+	lblAvis.for = 'txtAvis';
+
+	var btnEnvoyer = document.createElement('span');
+	btnEnvoyer.id = 'btnEnvoyer';
+	btnEnvoyer.className = btnEnvoyer.id;
+	btnEnvoyer.addEventListener('click',function(){
+		alert('envoyer avis');
+	});
+	
+	frmAvis.appendChild(h1Titre);
+	frmAvis.appendChild(lblAvis);
+	frmAvis.appendChild(txtAvis);
+	divInfoWindow.appendChild(frmAvis);
+
+	if (typeof infoWindow != "undefined") infoWindow.close();
+	infoWindow = new google.maps.InfoWindow();
+	infoWindow.setContent(divInfoWindow);
+
+	return infoWindow;
+}
+
+/* ===========================================================================
+	Fonction: btnPosterAvisClick
+	Description: afficher fenêtre d'ajout d'avis.
+*/
+function btnPosterAvisClick(marker) {
+	var infoWinow = creeInfoWindowAjouterAvis(marker);
+	infoWindow.open(carte,marker);
+}
+
+/* ===========================================================================
 	Fonction: creerInfoWindowBorne
 	Description: Création d'une infoWindow pour afficher les avis.
 */
@@ -115,6 +165,7 @@ function creerInfoWindowBorne(marker){
 	divInfoWindow.appendChild(unH1);
 
 	var divInfos = document.createElement('div');
+	divInfos.id = "divBorneInfos";
 	divInfoWindow.appendChild(divInfos);
 
 	var pArrond = document.createElement('p');
@@ -145,6 +196,16 @@ function creerInfoWindowBorne(marker){
 		chargerAvisBorne(this.marker);
 	});
 
+	var btnPosterAvis = document.createElement('span');
+	btnPosterAvis.id = "btnPosterAvis"
+	btnPosterAvis.marker = marker;
+	btnPosterAvis.textContent = "Poster un avis";
+
+	btnVoirPplusDavis.addEventListener('click',function(){
+		btnPosterAvisClick(this.marker);
+	});
+
+	divInfoWindow.appendChild(btnPosterAvis);
 	divInfoWindow.appendChild(btnVoirPplusDavis);
 
 	marker.divInfoWindow = divInfoWindow;
@@ -152,7 +213,6 @@ function creerInfoWindowBorne(marker){
 	chargerAvisBorne(marker);
 
 	if (typeof infoWindow != "undefined") infoWindow.close();
-
 	infoWindow = new google.maps.InfoWindow();
 	infoWindow.setContent(divInfoWindow);
 
