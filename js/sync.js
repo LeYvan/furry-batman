@@ -256,7 +256,7 @@ function chargerAvisBorne(marker){
 */
 function showRTC(e){
 	var rtcLayer = new google.maps.KmlLayer({
-										    url: 'http://yvan.wtf/include/rtc-trajets.kml'
+										    url: 'http://yvan.wtf/include/rtc-trajets.kml?time='+new Date().getTime()
 										    //url: 'http://gmaps-samples.googlecode.com/svn/trunk/ggeoxml/cta.kml'
 										  	});
 	if(e.target.checked){
