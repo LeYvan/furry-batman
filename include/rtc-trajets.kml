@@ -1,12 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<kml xsi:schemaLocation="http://www.opengis.net/kml/2.2  http://schemas.opengis.net/kml/2.2.0/ogckml22.xsd" 
-     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-     xmlns="http://www.opengis.net/kml/2.2" >
-<Document>
-<name>Trajets RTC</name>
-<open>1</open>
-<Folder>
-<name>Métrobus</name>
+<kml xmlns="http://earth.google.com/kml/2.1">
 <Placemark>
 <name>800</name>
 <description>Beauport - Pointe-de-Sainte-Foy</description>
@@ -739,16 +732,18 @@
                             </coordinates>
 </LineString>
 </Placemark>
+>>>>>>> 21b6c623dae855ff2748f43adb0377a38a65a75b
 <Placemark>
 <name>801</name>
 <description>Charlesbourg - Pointe-de-Sainte-Foy</description>
 <Style>
 <LineStyle>
-<color>9940C78D</color>
+<color>FFFFFFFF</color>
 <width>2</width>
 </LineStyle>
 </Style>
 <LineString>
+ <altitudeMode>relative</altitudeMode>
 <coordinates>-71.33077615,46.75183033
                             -71.33102882,46.75166296
                             -71.33121051,46.75156178

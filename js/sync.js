@@ -272,14 +272,12 @@ function showRTC(e){
 	rtcLayer = new google.maps.KmlLayer({
 										    //url: 'http://yvan.wtf/include/rtc-trajets.kml'
 										    url: 'http://gmaps-samples.googlecode.com/svn/trunk/ggeoxml/cta.kml'
-										  	});
 	if(e.target.checked){
   		rtcLayer.setMap(carte);
 	}
 	else{
 		rtcLayer.setMap(null);
 	}
-
 }
 
 /* ===========================================================================
