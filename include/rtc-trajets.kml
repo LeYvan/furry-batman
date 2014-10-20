@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?><kml xsi:schemaLocation="http://www.opengis.net/kml/2.2  http://schemas.opengis.net/kml/2.2.0/ogckml22.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.opengis.net/kml/2.2">
+<?xml version="1.0" encoding="utf-8"?>
+<kml xsi:schemaLocation="http://www.opengis.net/kml/2.2  http://schemas.opengis.net/kml/2.2.0/ogckml22.xsd" 
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+     xmlns="http://www.opengis.net/kml/2.2" >
 <Document>
 <name>Trajets RTC</name>
 <open>1</open>
 <Folder>
 <name>Métrobus</name>
-<Icon>
-<href>http://upload.wikimedia.org/wikipedia/fr/8/85/Metrobus_RTC_Quebec.png</href>
-</Icon>
 <Placemark>
 <name>800</name>
 <description>Beauport - Pointe-de-Sainte-Foy</description>
@@ -2096,9 +2096,6 @@
 </Folder>
 <Folder>
 <name>LeBus</name>
-<Icon>
-<href>http://upload.wikimedia.org/wikipedia/fr/2/28/Bus_RTC_Quebec.png</href>
-</Icon>
 <Placemark>
 <name>1</name>
 <description>Station Belvédère - Gare fluviale / Cap-Blanc</description>
@@ -26120,9 +26117,6 @@
 </Folder>
 <Folder>
 <name>eXpressbus</name>
-<Icon>
-<href>http://upload.wikimedia.org/wikipedia/fr/d/d1/Express_RTC_Quebec.png</href>
-</Icon>
 <Placemark>
 <name>214</name>
 <description>Gare du Palais - Cap-Rouge</description>
@@ -59089,9 +59083,6 @@
 </Folder>
 <Folder>
 <name>Couche-tard</name>
-<Icon>
-<href>http://rtcquebec.ca/portals/0/Pages/Comment_Voyager_Bus/Services/IMG/Couche_Tard.jpg</href>
-</Icon>
 <Placemark>
 <name>907</name>
 <description>Place D'Youville - Pointe-de-Sainte-Foy</description>
