@@ -1,6 +1,7 @@
 var listeBornes;
 var listeMarkers = [];
 var infoWindow;
+var rtcLayer;
 var listePolygones = [];
 var listeArrond = [];
 var listeCouleur = ["red", "blue", "yellow", "green", "orange", "purple", "black"];
@@ -77,6 +78,7 @@ function traitementPostChargement() {
 	initCarte();
 	verifierPosition();
 	reperesZap(listeBornes);
+	rtcLayer = new google.maps.KmlLayer(null);
 }
 
 /* ===========================================================================
@@ -128,14 +130,24 @@ function creeInfoWindowAjouterAvis(marker){
 	btnEnvoyer.id = 'btnEnvoyer';
 	btnEnvoyer.className = btnEnvoyer.id;
 	btnEnvoyer.textContent = "Envoyer";
-	btnEnvoyer.addEventListener('click',function(){
-		alert('envoyer avis');
-	});
+	btnEnvoyer.marker = marker;
+	btnEnvoyer.addEventListener('click',envoyerAvis);
+
+	var loading = document.createElement('span');
+	loading.id = 'chargementAvis';
+	loading.className = "chargementAvis";
+	loading.style.visibility = "hidden";
+
+	var msgErreur = document.createElement('p');
+	msgErreur.id = 'msgErreur';
+	msgErreur.style.visibility = "hidden";
 	
 	frmAvis.appendChild(h1Titre);
 	frmAvis.appendChild(lblAvis);
 	frmAvis.appendChild(txtAvis);
 	frmAvis.appendChild(btnEnvoyer);
+	divInfoWindow.appendChild(loading);
+	divInfoWindow.appendChild(msgErreur);
 	divInfoWindow.appendChild(frmAvis);
 
 	if (typeof infoWindow != "undefined") infoWindow.close();
@@ -257,9 +269,9 @@ function chargerAvisBorne(marker){
 	Description: Affiche le layer des trajets RTC.
 */
 function showRTC(e){
-	var rtcLayer = new google.maps.KmlLayer({
-										    url: 'http://yvan.wtf/include/rtc-trajets.kml'
-										    //url: 'http://gmaps-samples.googlecode.com/svn/trunk/ggeoxml/cta.kml'
+	rtcLayer = new google.maps.KmlLayer({
+										    //url: 'http://yvan.wtf/include/rtc-trajets.kml'
+										    url: 'http://gmaps-samples.googlecode.com/svn/trunk/ggeoxml/cta.kml'
 										  	});
 	if(e.target.checked){
   		rtcLayer.setMap(carte);
@@ -366,6 +378,29 @@ function gererArrondSelect(status){
 		$(listePolygones[i].nom).checked = afficherCacher;
 		afficherCacherArrond(listePolygones[i].nom, afficherCacher);
 	}
+}
+
+/* ===========================================================================
+	Fonction: envoyerAvis
+	Description: 
+*/	
+function envoyerAvis(){
+	$('btnEnvoyer').disabled = true;
+	$('txtAvis').disabled = true;
+	$('chargementAvis').style.visibility = "visible";
+
+	xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = envoyerAvisCallback;
+	
+	// Contenu de la requête avec la méthode POST.
+	contenuPOST = 'borne=' + encodeURIComponent($('btnEnvoyer').marker.borne.nom) + '&text=' + encodeURIComponent($('txtAvis').value) + '&action=posterAvis';
+
+	alert(contenuPOST);
+	var URL = 'http://yvan.wtf/zap-avis.php';
+
+	xhr.open('POST', URL, true);
+	xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+	xhr.send(contenuPOST);
 }
 
 

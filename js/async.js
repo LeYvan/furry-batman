@@ -324,3 +324,31 @@ function afficherAvis(marker){
 		}
 	}
 }
+
+/* ===========================================================================
+	Fonction: envoyerAvisCallback
+	Description: 
+*/
+function envoyerAvisCallback(){
+
+	if ( xhr.readyState == 4 ) {
+		
+		if ( xhr.status != 200 ) {
+			var msgErreur = 'Erreur (code=' + xhr.status + '): La requête HTTP n\'a pu être complétée.';
+			$('msgErreur').textContent = msgErreur;
+	
+		} else {
+			try { 
+				obj = JSON.parse( xhr.responseText );
+			} catch (e) {
+				$('msgErreur').textContent = 'ERREUR: La réponse AJAX n\'est pas une expression JSON valide.';
+				return;
+			}
+
+			
+		$('msgErreur').textContent = obj.message;
+			
+		}
+		$('msgErreur').style.visibility = "visible";
+	}
+}
