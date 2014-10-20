@@ -1,6 +1,6 @@
 <?php	
 
-	error_reporting(E_ERROR);
+	error_reporting(E_ALL);
 
 	if (isset($argv[1]) && $argv[1] == 'debug')
 	{
