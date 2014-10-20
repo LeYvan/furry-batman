@@ -37,6 +37,7 @@
 		die("Erreur!\r\nDétails: {$e->getMessage()}");
 	}
 
+	/*
 	print("Vidage de la table avis...");
 
 	try {
@@ -48,6 +49,7 @@
 	} catch (Exception $e) {
 		die("Erreur!\r\nDétails: {$e->getMessage()}");
 	}
+	*/
 
 	print("Insertion d'avis dans la table avis...");
 

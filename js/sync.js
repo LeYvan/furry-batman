@@ -127,6 +127,7 @@ function creeInfoWindowAjouterAvis(marker){
 	var btnEnvoyer = document.createElement('span');
 	btnEnvoyer.id = 'btnEnvoyer';
 	btnEnvoyer.className = btnEnvoyer.id;
+	btnEnvoyer.textContent = "Envoyer";
 	btnEnvoyer.addEventListener('click',function(){
 		alert('envoyer avis');
 	});
@@ -134,6 +135,7 @@ function creeInfoWindowAjouterAvis(marker){
 	frmAvis.appendChild(h1Titre);
 	frmAvis.appendChild(lblAvis);
 	frmAvis.appendChild(txtAvis);
+	frmAvis.appendChild(btnEnvoyer);
 	divInfoWindow.appendChild(frmAvis);
 
 	if (typeof infoWindow != "undefined") infoWindow.close();
@@ -201,7 +203,7 @@ function creerInfoWindowBorne(marker){
 	btnPosterAvis.marker = marker;
 	btnPosterAvis.textContent = "Poster un avis";
 
-	btnVoirPplusDavis.addEventListener('click',function(){
+	btnPosterAvis.addEventListener('click',function(){
 		btnPosterAvisClick(this.marker);
 	});
 
