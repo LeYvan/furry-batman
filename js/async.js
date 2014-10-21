@@ -222,7 +222,7 @@ com.dinfogarneau.cours526.chargerArrondissement = function(){
 	com.dinfogarneau.cours526.xhrArrond.open('GET', URL, true);
 	
 	com.dinfogarneau.cours526.xhrArrond.send(null);
-	com.dinfogarneau.cours526.controleurChargement("arrond");
+	
 };
 
 /* ===========================================================================
@@ -230,6 +230,7 @@ com.dinfogarneau.cours526.chargerArrondissement = function(){
 	Description: Callback de la requête AJAX qui charge les arrondissements.
 */	
 com.dinfogarneau.cours526.chargerArrondCallback = function() {
+
 	if ( com.dinfogarneau.cours526.xhrArrond.readyState == 4 ) {
 		
 		if ( com.dinfogarneau.cours526.xhrArrond.status != 200 ) {
@@ -253,6 +254,8 @@ com.dinfogarneau.cours526.chargerArrondCallback = function() {
 							   	"polygone":coords};
 				i++;
 			}
+
+			com.dinfogarneau.cours526.controleurChargement("arrond");
 			
 		}
 	}

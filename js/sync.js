@@ -299,6 +299,7 @@ com.dinfogarneau.cours526.showRTC = function(e){
 				 a fonctionnée.
 */	
 com.dinfogarneau.cours526.polygoneArrond = function(){		
+	console.log("polygoneArrond start")
  	var i;
  	
  	var polygone;
@@ -326,6 +327,7 @@ com.dinfogarneau.cours526.polygoneArrond = function(){
  		});
 
  		com.dinfogarneau.cours526.listePolygones[i] = {"nom": nom, "polygone": polygone};
+ 		if(com.dinfogarneau.cours526.listePolygones.length == 6) console.log("polygoneArrond done");
  	}
 };
 
