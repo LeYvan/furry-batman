@@ -281,12 +281,13 @@ com.dinfogarneau.cours526.chargerAvisBorne = function(marker){
 */
 com.dinfogarneau.cours526.showRTC = function(e){
 	com.dinfogarneau.cours526.rtcLayer = new google.maps.KmlLayer({
-										    //url: 'http://yvan.wtf/include/rtc-trajets.kml'
-										    url: 'http://gmaps-samples.googlecode.com/svn/trunk/ggeoxml/cta.kml'
+										    //url: 'http://yvan.wtf/include/test.php?temps=' + new Date().getTime()
+										    //url: 'http://gmaps-samples.googlecode.com/svn/trunk/ggeoxml/cta.kml'
+										    url: 'http://yvan.wtf/include/cta.kml?temps=' + new Date().getTime()
 										});
 	
 	if(e.target.checked){
-  		com.dinfogarneau.cours526.rtcLayer.setMap(carte);
+  		com.dinfogarneau.cours526.rtcLayer.setMap(com.dinfogarneau.cours526.carte);
 	}
 	else{
 		com.dinfogarneau.cours526.rtcLayer.setMap(null);
@@ -403,7 +404,7 @@ com.dinfogarneau.cours526.envoyerAvis = function(){
 	$('chargementAvis').style.visibility = "visible";
 
 	xhr = new XMLHttpRequest();
-	xhr.onreadystatechange = envoyerAvisCallback;
+	xhr.onreadystatechange = com.dinfogarneau.cours526.envoyerAvisCallback;
 	
 	// Contenu de la requête avec la méthode POST.
 	contenuPOST = 'borne=' + encodeURIComponent($('btnEnvoyer').marker.borne.nom) + '&text=' + encodeURIComponent($('txtAvis').value) + '&action=posterAvis';
