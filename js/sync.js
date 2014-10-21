@@ -1,91 +1,102 @@
-var listeBornes;
-var listeMarkers = [];
-var infoWindow;
-var rtcLayer;
-var listePolygones = [];
-var listeArrond = [];
-var listeCouleur = ["red", "blue", "yellow", "green", "orange", "purple", "black"];
-// Indique quels éléments ont déjà été chargés.
-var elementsCharges = {"dom": false, "api-google-map": false, "zap": false, "arrond":false};
-window.addEventListener('load',init, false);
+if (typeof com === 'undefined')
+	var com = {};
 
-chargerZap();
-chargerArrondissement();
+if (typeof com.dinfogarneau === 'undefined')
+	com.dinfogarneau = {};
+
+if (typeof com.dinfogarneau.cours526 === 'undefined')
+	com.dinfogarneau.cours526 = {};
+
+
+
+com.dinfogarneau.cours526.listeBornes;
+com.dinfogarneau.cours526.listeMarkers = [];
+com.dinfogarneau.cours526.infoWindow;
+com.dinfogarneau.cours526.rtcLayer;
+com.dinfogarneau.cours526.listePolygones = [];
+com.dinfogarneau.cours526.listeArrond = [];
+com.dinfogarneau.cours526.listeCouleur = ["red", "blue", "yellow", "green", "orange", "purple", "black"];
+// Indique quels éléments ont déjà été chargés.
+com.dinfogarneau.cours526.elementsCharges = {"dom": false, "api-google-map": false, "zap": false, "arrond":false};
+
 
 /* ===========================================================================
 	Fonction: init
 	Description: Fonction init de base de la page.
 */
-function init(){
-	$("boutonOptions").addEventListener('click', showOptions, false);
+com.dinfogarneau.cours526.init = function(){
+	$("boutonOptions").addEventListener('click', com.dinfogarneau.cours526.showOptions, false);
 	$("options").style.visibility = "hidden";
 
 	var chkBox = document.getElementsByTagName("input");
 
 	for (var i = 0; i < chkBox.length; i++) {
-		chkBox[i].addEventListener('change', gestionClickOptions, false);
+		chkBox[i].addEventListener('change', com.dinfogarneau.cours526.gestionClickOptions, false);
 	};
-}
+};
+
+window.addEventListener('load',com.dinfogarneau.cours526.init, false);
 
 /* ===========================================================================
 	Fonction: controleurChargement
 	Description: Contrôle le chargement asynchrone de divers éléments.
 */
-function controleurChargement(nouvElemCharge) {
+com.dinfogarneau.cours526.controleurChargement = function(nouvElemCharge) {
 	console.log('controleurChargement: Nouvel élément chargé "' + nouvElemCharge + '".');
-	if (typeof elementsCharges[nouvElemCharge] != "undefined") {
+	if (typeof com.dinfogarneau.cours526.elementsCharges[nouvElemCharge] != "undefined") {
 
-		elementsCharges[nouvElemCharge] = true;
+		com.dinfogarneau.cours526.elementsCharges[nouvElemCharge] = true;
 
 		var tousCharge = true;
-		for (var elem in elementsCharges) {
-			if ( ! elementsCharges[elem] )
+		for (var elem in com.dinfogarneau.cours526.elementsCharges) {
+			if ( ! com.dinfogarneau.cours526.elementsCharges[elem] )
 				tousCharge = false;
 			}
 
 			if (tousCharge) {
 				console.log('controleurChargement: Tous les éléments ont été chargés.');
-				traitementPostChargement();
+				com.dinfogarneau.cours526.traitementPostChargement();
 			} else {
 				console.log('controleurChargement: Il reste encore des éléments à charger.');
 		}
 	}
-}
+};
 
 // Gestionnaire d'événements pour le chargement du DOM
 window.addEventListener('DOMContentLoaded', function() {
 		console.log('DOM chargé.');
-		controleurChargement("dom");
-		chargerScriptAsync('https://maps.googleapis.com/maps/api/js?sensor=true&libraries=geometry&callback=apiGoogleMapCharge', null);
+		com.dinfogarneau.cours526.controleurChargement("dom");
+		chargerScriptAsync('https://maps.googleapis.com/maps/api/js?sensor=true&libraries=geometry&callback=com.dinfogarneau.cours526.apiGoogleMapCharge', null);
 		}, false);
 
 /* ===========================================================================
 	Fonction: apiGoogleMapCharge
 	Description: Indique que l'API Google Map est chargé.
 */
-function apiGoogleMapCharge() {
+com.dinfogarneau.cours526.apiGoogleMapCharge = function() {
 	console.log('API Google Map chargé.');
-	controleurChargement("api-google-map");
-}
+	com.dinfogarneau.cours526.controleurChargement("api-google-map");
+};
 
 /* ===========================================================================
 	Fonction: traitementPostChargement
 	Description: Responsable des traitements post-chargement.
 */
-function traitementPostChargement() {
+com.dinfogarneau.cours526.traitementPostChargement = function() {
 	console.log('Traitement post-chargement.');
 
-	initCarte();
-	verifierPosition();
-	reperesZap(listeBornes);
-	rtcLayer = new google.maps.KmlLayer(null);
-}
+	com.dinfogarneau.cours526.initCarte();
+	com.dinfogarneau.cours526.verifierPosition();
+	com.dinfogarneau.cours526.reperesZap(listeBornes);
+	com.dinfogarneau.cours526.rtcLayer = new google.maps.KmlLayer(null);
+	com.dinfogarneau.cours526.polygoneArrond();
+};
 
 /* ===========================================================================
 	Fonction: showOptions
 	Description: Afficher/Cacher le pannau d'options
 */
-function showOptions(){
+com.dinfogarneau.cours526.showOptions = function(){
 	var panel = $("options");
 	if(panel.style.visibility == "hidden"){
 		panel.style.visibility = "visible";
@@ -93,22 +104,22 @@ function showOptions(){
 	else{
 		panel.style.visibility = "hidden";
 	}
-}
+};
 
 /* ===========================================================================
 	Fonction: evenementBorneClick
 	Description: Affiche les infoWindows lors d'un clic sur une ZAP.
 */
-function evenementBorneClick(){
-	var infoWinow = creerInfoWindowBorne(this);
-	infoWindow.open(carte,this);
-}
+com.dinfogarneau.cours526.evenementBorneClick = function(){
+	var infoWindow = com.dinfogarneau.cours526.creerInfoWindowBorne(this);
+	infoWindow.open(com.dinfogarneau.cours526.carte,this);
+};
 
 /* ===========================================================================
 	Fonction: creeInfoWindowAjouterAvis
 	Description: Affiche une infoWIndow pour ajouter une avis.
 */
-function creeInfoWindowAjouterAvis(marker){
+com.dinfogarneau.cours526.creeInfoWindowAjouterAvis = function(marker){
 	var divInfoWindow = document.createElement('div');
 	divInfoWindow.id = "infoWindowDiv";
 
@@ -150,27 +161,27 @@ function creeInfoWindowAjouterAvis(marker){
 	divInfoWindow.appendChild(msgErreur);
 	divInfoWindow.appendChild(frmAvis);
 
-	if (typeof infoWindow != "undefined") infoWindow.close();
-	infoWindow = new google.maps.InfoWindow();
-	infoWindow.setContent(divInfoWindow);
+	if (typeof com.dinfogarneau.cours526.infoWindow != "undefined") com.dinfogarneau.cours526.infoWindow.close();
+	com.dinfogarneau.cours526.infoWindow = new google.maps.InfoWindow();
+	com.dinfogarneau.cours526.infoWindow.setContent(divInfoWindow);
 
-	return infoWindow;
-}
+	return com.dinfogarneau.cours526.infoWindow;
+};
 
 /* ===========================================================================
 	Fonction: btnPosterAvisClick
 	Description: afficher fenêtre d'ajout d'avis.
 */
-function btnPosterAvisClick(marker) {
+com.dinfogarneau.cours526.btnPosterAvisClick = function(marker) {
 	var infoWinow = creeInfoWindowAjouterAvis(marker);
 	infoWindow.open(carte,marker);
-}
+};
 
 /* ===========================================================================
 	Fonction: creerInfoWindowBorne
 	Description: Création d'une infoWindow pour afficher les avis.
 */
-function creerInfoWindowBorne(marker){
+com.dinfogarneau.cours526.creerInfoWindowBorne = function(marker){
 	var divInfoWindow = document.createElement('div');
 	divInfoWindow.id = "infoWindowDiv";
 	var unH1 = document.createElement('h1');
@@ -207,7 +218,7 @@ function creerInfoWindowBorne(marker){
 	btnVoirPplusDavis.textContent = "Voir plus d'avis";
 
 	btnVoirPplusDavis.addEventListener('click',function(){
-		chargerAvisBorne(this.marker);
+		com.dinfogarneau.cours526.chargerAvisBorne(this.marker);
 	});
 
 	var btnPosterAvis = document.createElement('span');
@@ -216,7 +227,7 @@ function creerInfoWindowBorne(marker){
 	btnPosterAvis.textContent = "Poster un avis";
 
 	btnPosterAvis.addEventListener('click',function(){
-		btnPosterAvisClick(this.marker);
+		com.dinfogarneau.cours526.btnPosterAvisClick(this.marker);
 	});
 
 	divInfoWindow.appendChild(btnPosterAvis);
@@ -224,25 +235,25 @@ function creerInfoWindowBorne(marker){
 
 	marker.divInfoWindow = divInfoWindow;
 
-	chargerAvisBorne(marker);
+	com.dinfogarneau.cours526.chargerAvisBorne(marker);
 
-	if (typeof infoWindow != "undefined") infoWindow.close();
-	infoWindow = new google.maps.InfoWindow();
-	infoWindow.setContent(divInfoWindow);
+	if (typeof com.dinfogarneau.cours526.infoWindow != "undefined") com.dinfogarneau.cours526.infoWindow.close();
+	com.dinfogarneau.cours526.infoWindow = new google.maps.InfoWindow();
+	com.dinfogarneau.cours526.infoWindow.setContent(divInfoWindow);
 
-	return infoWindow;
-}
+	return com.dinfogarneau.cours526.infoWindow;
+};
 
 /* ===========================================================================
 	Fonction: chargerAvisBorne
 	Description: Chargement des avis.
 */
-function chargerAvisBorne(marker){
+com.dinfogarneau.cours526.chargerAvisBorne = function(marker){
 	var xhrAvis = new XMLHttpRequest();
-	xhrAvis.onreadystatechange = chargerAvisCallback;
+	xhrAvis.onreadystatechange = com.dinfogarneau.cours526.chargerAvisCallback;
 
 	// Pour pouvoir récupérer le marker qui a lancé la recherche d'avis,
-	// on donne le marker en référence à la requête.
+	// on donne com.dinfogarneau.cours526.le marker en référence à la requête.
 	xhrAvis.marker = marker;
 
 	var strURL = 'http://yvan.wtf/zap-avis.php?action=chercherAvis&borne=' + marker.borne.nom;
@@ -262,129 +273,129 @@ function chargerAvisBorne(marker){
 
 	xhrAvis.open('GET', strURL, true);
 	xhrAvis.send(null);
-}
+};
 
 /* ===========================================================================
 	Fonction: showRTC
 	Description: Affiche le layer des trajets RTC.
 */
-function showRTC(e){
-	rtcLayer = new google.maps.KmlLayer({
+com.dinfogarneau.cours526.showRTC = function(e){
+	com.dinfogarneau.cours526.rtcLayer = new google.maps.KmlLayer({
 										    //url: 'http://yvan.wtf/include/rtc-trajets.kml'
 										    url: 'http://gmaps-samples.googlecode.com/svn/trunk/ggeoxml/cta.kml'
 										});
 	
 	if(e.target.checked){
-  		rtcLayer.setMap(carte);
+  		com.dinfogarneau.cours526.rtcLayer.setMap(carte);
 	}
 	else{
-		rtcLayer.setMap(null);
+		com.dinfogarneau.cours526.rtcLayer.setMap(null);
 	}
-}
+};
 
 /* ===========================================================================
 	Fonction: polygoneArrond
 	Description: Création des polygones des arrondissements si la requête HTTP 
 				 a fonctionnée.
 */	
-function polygoneArrond(){		
+com.dinfogarneau.cours526.polygoneArrond = function(){		
  	var i;
  	
  	var polygone;
 
- 	for (i = 0; i < listeArrond.length; i++) {
+ 	for (i = 0; i < com.dinfogarneau.cours526.listeArrond.length; i++) {
  		var coordsTemp = [];
  		var coordsPoly = [];
 
- 		coordsTemp = listeArrond[i].polygone.split(',');
+ 		coordsTemp = com.dinfogarneau.cours526.listeArrond[i].polygone.split(',');
  		
  		for (var j = 0; j < coordsTemp.length; j++) {
  			var paireCoord = coordsTemp[j].split(' ');
  				coordsPoly[j] = new google.maps.LatLng(paireCoord[1], paireCoord[0]); 			
  		}
 
- 		nom = listeArrond[i].abreviation.textContent;
+ 		nom = com.dinfogarneau.cours526.listeArrond[i].abreviation.textContent;
 
  		polygone = new google.maps.Polygon({
  			paths: coordsPoly,
- 			strokeColor: listeCouleur[i],
+ 			strokeColor: com.dinfogarneau.cours526.listeCouleur[i],
  			strokeOpacity: 0.8,
  			strokeWeight: 2,
- 			fillColor : listeCouleur[i],
+ 			fillColor : com.dinfogarneau.cours526.listeCouleur[i],
  			fillOpacity : 0.35
  		});
 
- 		listePolygones[i] = {"nom": nom, "polygone": polygone};
+ 		com.dinfogarneau.cours526.listePolygones[i] = {"nom": nom, "polygone": polygone};
  	}
-}
+};
 
 /* ===========================================================================
 	Fonction: gestionClickOptions
 	Description: Gestionnaire du clic des options d'affichage.
 */	
-function gestionClickOptions(e){
+com.dinfogarneau.cours526.gestionClickOptions = function(e){
 	if(e.target.id == "all"){
-		gererArrondSelect(e.target.checked)
+		com.dinfogarneau.cours526.gererArrondSelect(e.target.checked)
 	}else if(e.target.id == "rtc"){
-		showRTC(e);
+		com.dinfogarneau.cours526.showRTC(e);
 	}else {
-		afficherCacherArrond(e.target.id, e.target.checked);
+		com.dinfogarneau.cours526.afficherCacherArrond(e.target.id, e.target.checked);
 	}
-}
+};
 
 /* ===========================================================================
 	Fonction: getArrondissement
 	Description: Rechercher et retourne un arrondissement selon son id.
 */	
-function getArrondissement(id){
+com.dinfogarneau.cours526.getArrondissement = function(id){
 	var i = 0;
-	while(i < listePolygones.length){
-		if(listePolygones[i].nom == id){
-			return listePolygones[i].polygone;
+	while(i < com.dinfogarneau.cours526.listePolygones.length){
+		if(com.dinfogarneau.cours526.listePolygones[i].nom == id){
+			return com.dinfogarneau.cours526.listePolygones[i].polygone;
 		}
 		i++;
 	}
 	return null;
-}
+};
 
 /* ===========================================================================
 	Fonction: afficherCacherArrond
 	Description: Affiche ou cache un arrondissement sur la carte selon le 
 				 statut du checkbox.
 */	
-function afficherCacherArrond(id,status){
+com.dinfogarneau.cours526.afficherCacherArrond = function(id,status){
 	if(status){
-		getArrondissement(id).setMap(carte);
+		com.dinfogarneau.cours526.getArrondissement(id).setMap(com.dinfogarneau.cours526.carte);
 	}
 	else
 	{
-		getArrondissement(id).setMap(null);
+		com.dinfogarneau.cours526.getArrondissement(id).setMap(null);
 	}
 
-}
+};
 
 /* ===========================================================================
 	Fonction: gererArrondSelect
 	Description: Gestion de l'affichage de tous les arrondissement en même 
 				 temps.
 */	
-function gererArrondSelect(status){
+com.dinfogarneau.cours526.gererArrondSelect = function(status){
 	var afficherCacher = false;
 	if(status){
 		afficherCacher = true;
 	}
 
-	for(var i = 0; i < listePolygones.length; i++){
-		$(listePolygones[i].nom).checked = afficherCacher;
-		afficherCacherArrond(listePolygones[i].nom, afficherCacher);
+	for(var i = 0; i < com.dinfogarneau.cours526.listePolygones.length; i++){
+		$(com.dinfogarneau.cours526.listePolygones[i].nom).checked = afficherCacher;
+		com.dinfogarneau.cours526.afficherCacherArrond(com.dinfogarneau.cours526.listePolygones[i].nom, afficherCacher);
 	}
-}
+};
 
 /* ===========================================================================
 	Fonction: envoyerAvis
 	Description: 
 */	
-function envoyerAvis(){
+com.dinfogarneau.cours526.envoyerAvis = function(){
 	$('btnEnvoyer').disabled = true;
 	$('txtAvis').disabled = true;
 	$('chargementAvis').style.visibility = "visible";
@@ -401,8 +412,7 @@ function envoyerAvis(){
 	xhr.open('POST', URL, true);
 	xhr.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 	xhr.send(contenuPOST);
-}
+};
 
-
-
-
+com.dinfogarneau.cours526.chargerZap();
+com.dinfogarneau.cours526.chargerArrondissement();

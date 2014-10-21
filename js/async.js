@@ -1,71 +1,81 @@
-var carte;
-var posUsager;
-var listeMarkers = [];
-var xhrZap;
-var xhrArrond;
+if (typeof com === 'undefined')
+	var com = {};
+
+if (typeof com.dinfogarneau === 'undefined')
+	com.dinfogarneau = {};
+
+if (typeof com.dinfogarneau.cours526 === 'undefined')
+	com.dinfogarneau.cours526 = {};
+
+
+com.dinfogarneau.cours526.carte;
+com.dinfogarneau.cours526.posUsager;
+com.dinfogarneau.cours526.listeMarkers = [];
+com.dinfogarneau.cours526.xhrZap;
+com.dinfogarneau.cours526.xhrArrond;
 // Position par défaut (Québec).
-var latDefaut = 46.803320;
-var longDefaut = -71.242773;
+com.dinfogarneau.cours526.latDefaut = 46.803320;
+com.dinfogarneau.cours526.longDefaut = -71.242773;
 
 
 /* ===========================================================================
 	Fonction: initCarte
 	Description: Chargement de la carte.
 */
-function initCarte() {
+com.dinfogarneau.cours526.initCarte = function() {
 	var optionsCarte = {
 		"zoom": 12,
 		"mapTypeId": google.maps.MapTypeId.ROADMAP,
 		"mapTypeControlOptions": {style: google.maps.MapTypeControlStyle.DROPDOWN_MENU, 
 									position: google.maps.ControlPosition.LEFT_TOP},
-		"center": new google.maps.LatLng(latDefaut, longDefaut)
+		"center": new google.maps.LatLng(com.dinfogarneau.cours526.latDefaut, com.dinfogarneau.cours526.longDefaut)
 		};
 
-	carte = new google.maps.Map(document.getElementById("carte-canvas"), optionsCarte);
-}
+	com.dinfogarneau.cours526.carte = new google.maps.Map(document.getElementById("carte-canvas"), optionsCarte);
+};
 
 /* ===========================================================================
 	Fonction: verifierPosition
 	Description: Vérifie si la géolocation est disponible. Si oui, une autre
 				 fonction est appelée pour la récupérer.
 */
-function verifierPosition(){
+com.dinfogarneau.cours526.verifierPosition = function(){
 	if ( typeof navigator.geolocation != "undefined" ) {
 		console.log('Le navigateur supporte la géolocalisation.');
-		navigator.geolocation.getCurrentPosition(getCurrentPositionSuccess, getCurrentPositionError, {});
+		navigator.geolocation.getCurrentPosition(com.dinfogarneau.cours526.getCurrentPositionSuccess, com.dinfogarneau.cours526.getCurrentPositionError, {});
 		} else {
 			console.log('Le navigateur NE supporte PAS la géolocalisation.');
 			var positionInit = new google.maps.LatLng(latDefaut, longDefaut);
-			carte.setCenter(positionInit);
+			com.dinfogarneau.cours526.carte.setCenter(positionInit);
 		}	
-}
+};
 
 /* ===========================================================================
 	Fonction: repereUsager
 	Description: Création du repère de l'usager sur la carte.
 */
-function repereUsager(lati, longi){
+com.dinfogarneau.cours526.repereUsager = function(lati, longi){
 	var posRepere = new google.maps.LatLng(lati , longi);
-	posUsager = posRepere;
+	com.dinfogarneau.cours526.posUsager = posRepere;
 
 	var optionsRepere = {
 						"position": posRepere, 
-						"map": carte,
+						"map": com.dinfogarneau.cours526.carte,
 						"icon": "images/male-2.png",
 						"clickable": true,
 						"draggable": false					
 					};
 	var repere = new google.maps.Marker(optionsRepere);
 
-	filtrerZap();	
-}
+	com.dinfogarneau.cours526.filtrerZap();	
+};
 
 /* ===========================================================================
 	Fonction: reperesZap
 	Description: Création des repères pour les ZAP sur la carte à partir de la
 				 liste des bornes.
 */
-function reperesZap(listeBornes){
+com.dinfogarneau.cours526.reperesZap = function(listeBornes){
 	var distance; 
 	var image;
 
@@ -75,7 +85,7 @@ function reperesZap(listeBornes){
 
 		var optionsRepere = {
 							"position": posRepere,
-							"map": carte,
+							"map": com.dinfogarneau.cours526.carte,
 							"icon": "images/wifi.png",
 							"clickable": true,
 							"draggable": false					
@@ -85,106 +95,106 @@ function reperesZap(listeBornes){
 
 		repere.borne = listeBornes[borne];
 
-		google.maps.event.addListener(repere,'click',evenementBorneClick);
+		google.maps.event.addListener(repere,'click',com.dinfogarneau.cours526.evenementBorneClick);
 	
-		listeMarkers[listeMarkers.length] = repere;
+		com.dinfogarneau.cours526.listeMarkers[com.dinfogarneau.cours526.listeMarkers.length] = repere;
 	}
-}
+};
 
 /* ===========================================================================
 	Fonction: filtrerZap
 	Description: Filtre les ZAP pour mettre en évidence celles qui sont dans 
 				 un rayon de 5 km de l'usager.
 */
-function filtrerZap(){
-	for (var i = 0; i < listeMarkers.length; i++) {
-		var distance = google.maps.geometry.spherical.computeDistanceBetween(listeMarkers[i].position, posUsager);
+com.dinfogarneau.cours526.filtrerZap = function(){
+	for (var i = 0; i < com.dinfogarneau.cours526.listeMarkers.length; i++) {
+		var distance = google.maps.geometry.spherical.computeDistanceBetween(com.dinfogarneau.cours526.listeMarkers[i].position, com.dinfogarneau.cours526.posUsager);
 		if(distance <= 5000){
-			listeMarkers[i].setIcon("images/wifi-green.png");
-			listeMarkers[i].setAnimation(google.maps.Animation.DROP);
+			com.dinfogarneau.cours526.listeMarkers[i].setIcon("images/wifi-green.png");
+			com.dinfogarneau.cours526.listeMarkers[i].setAnimation(google.maps.Animation.DROP);
 		}
 		else{
-			listeMarkers[i].setIcon("images/wifi.png");
+			com.dinfogarneau.cours526.listeMarkers[i].setIcon("images/wifi.png");
 		}
 	};
-}
+};
 
 /* ===========================================================================
 	Fonction: getCurrentPositionSuccess
 	Description: Récupère la position de l'usager si la géolocalisation est 
 				 supportée.
 */
-function getCurrentPositionSuccess (position) {	
+com.dinfogarneau.cours526.getCurrentPositionSuccess = function(position) {	
 	console.log('Position obtenue : ' + position.coords.latitude + ', ' + position.coords.longitude);
 	var positionInit = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 
-	carte.setCenter(positionInit);
+	com.dinfogarneau.cours526.carte.setCenter(positionInit);
 
-	repereUsager(position.coords.latitude, position.coords.longitude);
-	afficherCerleZoneCouverte(positionInit);
-}
+	com.dinfogarneau.cours526.repereUsager(position.coords.latitude, position.coords.longitude);
+	com.dinfogarneau.cours526.afficherCerleZoneCouverte(positionInit);
+};
 
 /* ===========================================================================
 	Fonction: getCurrentPositionError
 	Description: Appelée lors de l'échec (refus ou problème) de la récupération 
 				 de la position. Utilisation de la position par défaut.
 */	
-function getCurrentPositionError(erreur) {	
+com.dinfogarneau.cours526.getCurrentPositionError = function(erreur) {	
 	console.log('Utilisation de la position par défaut.');
 	var positionInit = new google.maps.LatLng(latDefaut, longDefaut);
-	carte.setCenter(positionInit);
-}
+	com.dinfogarneau.cours526.carte.setCenter(positionInit);
+};
 
 /* ===========================================================================
 	Fonction: afficherCerleZoneCouverte
 	Description: Affiche un cercle sur la carteautour de la position de 
 				 l'usager.
 */	
-function afficherCerleZoneCouverte(positionUtilisateur){
+com.dinfogarneau.cours526.afficherCerleZoneCouverte = function(positionUtilisateur){
 	var cercleZAPoptions = {
       "strokeColor": '#000066',
       "strokeOpacity": 0.25,
       "strokeWeight": 2,
       "fillColor": '#000088',
       "fillOpacity": 0.150,
-      "map": carte,
+      "map": com.dinfogarneau.cours526.carte,
       "center": positionUtilisateur,
       "radius": 5000
     };
 
     var cityCircle = new google.maps.Circle(cercleZAPoptions);
-}
+};
 
 /* ===========================================================================
 	Fonction: chargerZap
 	Description: Chargement des ZAP à l'aide d'une requête AJAX.
 */	
-function chargerZap() {	
-	xhrZap = new XMLHttpRequest();
-	xhrZap.onreadystatechange = chargerZapCallback;
+com.dinfogarneau.cours526.chargerZap = function() {	
+	com.dinfogarneau.cours526.xhrZap = new XMLHttpRequest();
+	com.dinfogarneau.cours526.xhrZap.onreadystatechange = com.dinfogarneau.cours526.chargerZapCallback;
 	
 	var URL = 'http://yvan.wtf/zap-bornes.php?action=chercherBornes';
-	xhrZap.open('GET', URL, true);
+	com.dinfogarneau.cours526.xhrZap.open('GET', URL, true);
 	
-	xhrZap.send(null);
-	controleurChargement("zap");
-}
+	com.dinfogarneau.cours526.xhrZap.send(null);
+	com.dinfogarneau.cours526.controleurChargement("zap");
+};
 
 /* ===========================================================================
 	Fonction: chargerZapCallback
 	Description: Callback de la requête AJAX qui charge les ZAP.
 */	
-function chargerZapCallback() {
-	if ( xhrZap.readyState == 4 ) {
+com.dinfogarneau.cours526.chargerZapCallback = function() {
+	if ( com.dinfogarneau.cours526.xhrZap.readyState == 4 ) {
 		
-		if ( xhrZap.status != 200 ) {
-			var msgErreur = 'Erreur (code=' + xhrZap.status + '): La requête HTTP n\'a pu être complétée.';
+		if ( com.dinfogarneau.cours526.xhrZap.status != 200 ) {
+			var msgErreur = 'Erreur (code=' + com.dinfogarneau.cours526.xhrZap.status + '): La requête HTTP n\'a pu être complétée.';
 			//$('msg-erreur').textContent = msgErreur;
 			
 		} else {
 			var objZap;
 			try { 
-				objZap = JSON.parse( xhrZap.responseText );
+				objZap = JSON.parse( com.dinfogarneau.cours526.xhrZap.responseText );
 			} catch (e) {
 				alert('ERREUR: La réponse AJAX n\'est pas une expression JSON valide.');
 				return;
@@ -198,37 +208,37 @@ function chargerZapCallback() {
 			}
 		}
 	}
-} 
+};
 
 /* ===========================================================================
 	Fonction: chargerArrondissement
 	Description: Chargement des arrondissements à l'aide d'une requête AJAX.
 */	
-function chargerArrondissement(){
-	xhrArrond = new XMLHttpRequest();
-	xhrArrond.onreadystatechange = chargerArrondCallback;
+com.dinfogarneau.cours526.chargerArrondissement = function(){
+	com.dinfogarneau.cours526.xhrArrond = new XMLHttpRequest();
+	com.dinfogarneau.cours526.xhrArrond.onreadystatechange = com.dinfogarneau.cours526.chargerArrondCallback;
 	
 	var URL = 'http://yvan.wtf/zap-arrond.php?action=lister';
-	xhrArrond.open('GET', URL, true);
+	com.dinfogarneau.cours526.xhrArrond.open('GET', URL, true);
 	
-	xhrArrond.send(null);
-	controleurChargement("arrond");
-}
+	com.dinfogarneau.cours526.xhrArrond.send(null);
+	com.dinfogarneau.cours526.controleurChargement("arrond");
+};
 
 /* ===========================================================================
 	Fonction: chargerArrondCallback
 	Description: Callback de la requête AJAX qui charge les arrondissements.
 */	
-function chargerArrondCallback() {
-	if ( xhrArrond.readyState == 4 ) {
+com.dinfogarneau.cours526.chargerArrondCallback = function() {
+	if ( com.dinfogarneau.cours526.xhrArrond.readyState == 4 ) {
 		
-		if ( xhrArrond.status != 200 ) {
-			var msgErreur = 'Erreur (code=' + xhrArrond.status + '): La requête HTTP n\'a pu être complétée.';
+		if ( com.dinfogarneau.cours526.xhrArrond.status != 200 ) {
+			var msgErreur = 'Erreur (code=' + com.dinfogarneau.cours526.xhrArrond.status + '): La requête HTTP n\'a pu être complétée.';
 			//$('msg-erreur').textContent = msgErreur;
 			
 		} else {
 			// Document XML retourné.
-			var docXML = xhrArrond.responseXML;
+			var docXML = com.dinfogarneau.cours526.xhrArrond.responseXML;
 			var racineXML = docXML.documentElement;
 			var i=0;
 			var arrond;
@@ -238,22 +248,22 @@ function chargerArrondCallback() {
 				coordsTemp = arrond.lastElementChild.textContent;
 				var coords = coordsTemp.substring(coordsTemp.indexOf('-'),coordsTemp.length - 2);
 
-				listeArrond[i] = {"nom": arrond.children[1],
+				com.dinfogarneau.cours526.listeArrond[i] = {"nom": arrond.children[1],
 								"abreviation": arrond.children[2],
 							   	"polygone":coords};
 				i++;
 			}
-			polygoneArrond();
+			
 		}
 	}
-} 
+};
 
 /* ===========================================================================
 	Fonction: chargerAvisCallback
 	Description: Callback de la requête AJAX qui demande et affiche les
 				 avis pour une ZAP.
 */	
-function chargerAvisCallback() {
+com.dinfogarneau.cours526.chargerAvisCallback = function() {
 	if ( this.readyState == 4 ) {
 		if ( this.status != 200 ) {
 			var msgErreur = 'Erreur (code=' + this.status + '): La requête HTTP n\'a pu être complétée.';
@@ -287,17 +297,17 @@ function chargerAvisCallback() {
 					ulAvis.style.height = '75%';
 				}
 				
-				afficherAvis(this.marker);
+				com.dinfogarneau.cours526.afficherAvis(this.marker);
 			}
 		}
 	}
-}
+};
 
 /* ===========================================================================
 	Fonction: afficherAvis
 	Description: Ajoute et affiche au maximun 3 avis de plus pour un marker.
 */	
-function afficherAvis(marker){
+com.dinfogarneau.cours526.afficherAvis = function(marker){
 	var divInfos = marker.divInfoWindow;
 
 	var liChargement = document.getElementById('chargementAvis');
@@ -323,13 +333,13 @@ function afficherAvis(marker){
 			nbAvisAjoute++;
 		}
 	}
-}
+};
 
 /* ===========================================================================
 	Fonction: envoyerAvisCallback
 	Description: 
 */
-function envoyerAvisCallback(){
+com.dinfogarneau.cours526.envoyerAvisCallback = function(){
 
 	if ( xhr.readyState == 4 ) {
 		
@@ -351,4 +361,4 @@ function envoyerAvisCallback(){
 		}
 		$('msgErreur').style.visibility = "visible";
 	}
-}
+};
