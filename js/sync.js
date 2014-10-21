@@ -234,6 +234,7 @@ com.dinfogarneau.cours526.creerInfoWindowBorne = function(marker){
 	divInfoWindow.appendChild(btnVoirPplusDavis);
 
 	marker.divInfoWindow = divInfoWindow;
+	//marker.setIcon
 
 	com.dinfogarneau.cours526.chargerAvisBorne(marker);
 
@@ -281,9 +282,9 @@ com.dinfogarneau.cours526.chargerAvisBorne = function(marker){
 */
 com.dinfogarneau.cours526.showRTC = function(e){
 	com.dinfogarneau.cours526.rtcLayer = new google.maps.KmlLayer({
-										    //url: 'http://yvan.wtf/include/test.php?temps=' + new Date().getTime()
+										    url: 'http://yvan.wtf/include/rtc-trajets2.kml?temps=' + new Date().getTime()
 										    //url: 'http://gmaps-samples.googlecode.com/svn/trunk/ggeoxml/cta.kml'
-										    url: 'http://yvan.wtf/include/cta.kml?temps=' + new Date().getTime()
+										    //url: 'http://yvan.wtf/include/cta.kml?temps=' + new Date().getTime()
 										});
 	
 	if(e.target.checked){
