@@ -27,7 +27,7 @@ body
 	top: 50px;
 	background-color: rgba(190,190,190,0.8);
 	border: 2px solid;
-	max-height: 400px;
+	/* max-height: 400px; */
 	max-width: 400px;
 	visibility: hidden;
 	margin: 0.5em;
@@ -167,4 +167,10 @@ body
 	border-style: inset;
 	border-width: 0.125em;
 	background-color: lightgray;
+}
+
+.elemListeZap {
+	display: inline-block;
+	width: 50%;
+	padding-top: 0.125em;
 }

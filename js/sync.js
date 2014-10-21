@@ -90,6 +90,22 @@ com.dinfogarneau.cours526.traitementPostChargement = function() {
 	com.dinfogarneau.cours526.reperesZap(listeBornes);
 	com.dinfogarneau.cours526.rtcLayer = new google.maps.KmlLayer(null);
 	com.dinfogarneau.cours526.polygoneArrond();
+	com.dinfogarneau.cours526.afficherListeZAP();
+};
+
+/* ===========================================================================
+	Fonction: afficherListeZAP
+	Description: affiche la liste des ZAP dans la fenêtre d'options.
+*/
+com.dinfogarneau.cours526.afficherListeZAP = function() {
+	var ul = $('ulBornesZap');
+
+	for (borne in listeBornes){	
+		var li = document.createElement('li');
+		li.className = "elemListeZap";
+		li.textContent = listeBornes[borne].batiment;
+		ul.appendChild(li);
+	}
 };
 
 /* ===========================================================================
@@ -111,8 +127,17 @@ com.dinfogarneau.cours526.showOptions = function(){
 	Description: Affiche les infoWindows lors d'un clic sur une ZAP.
 */
 com.dinfogarneau.cours526.evenementBorneClick = function(){
+	this.oldIcon = this.getIcon(); 
+	this.setIcon('images/wifi-red.png');
+
 	var infoWindow = com.dinfogarneau.cours526.creerInfoWindowBorne(this);
 	infoWindow.open(com.dinfogarneau.cours526.carte,this);
+
+	infoWindow.marker = this;
+
+	google.maps.event.addListener(com.dinfogarneau.cours526.infoWindow, 'closeclick', function(){
+		this.marker.setIcon(this.marker.oldIcon);
+	});
 };
 
 /* ===========================================================================
@@ -234,7 +259,6 @@ com.dinfogarneau.cours526.creerInfoWindowBorne = function(marker){
 	divInfoWindow.appendChild(btnVoirPplusDavis);
 
 	marker.divInfoWindow = divInfoWindow;
-	//marker.setIcon
 
 	com.dinfogarneau.cours526.chargerAvisBorne(marker);
 

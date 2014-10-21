@@ -7,7 +7,6 @@ if (typeof com.dinfogarneau === 'undefined')
 if (typeof com.dinfogarneau.cours526 === 'undefined')
 	com.dinfogarneau.cours526 = {};
 
-
 com.dinfogarneau.cours526.carte;
 com.dinfogarneau.cours526.posUsager;
 com.dinfogarneau.cours526.listeMarkers = [];
@@ -297,7 +296,7 @@ com.dinfogarneau.cours526.chargerAvisCallback = function() {
 					btnVoirPlusAvis.style.visibility = 'collapse';
 
 					var ulAvis = document.getElementById('ulAvis' + this.marker.borne.nom);
-					ulAvis.style.height = '75%';
+					//ulAvis.style.height = '75%';
 				}
 				
 				com.dinfogarneau.cours526.afficherAvis(this.marker);
