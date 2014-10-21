@@ -305,13 +305,10 @@ com.dinfogarneau.cours526.chargerAvisBorne = function(marker){
 	Description: Affiche le layer des trajets RTC.
 */
 com.dinfogarneau.cours526.showRTC = function(e){
-	com.dinfogarneau.cours526.rtcLayer = new google.maps.KmlLayer({
-										    url: 'http://yvan.wtf/include/rtc-trajets2.kml?temps=' + new Date().getTime()
-										    //url: 'http://gmaps-samples.googlecode.com/svn/trunk/ggeoxml/cta.kml'
-										    //url: 'http://yvan.wtf/include/cta.kml?temps=' + new Date().getTime()
-										});
-	
 	if(e.target.checked){
+		com.dinfogarneau.cours526.rtcLayer = new google.maps.KmlLayer({
+										    url: 'http://yvan.wtf/include/rtc-trajets.kml?temps=' + new Date().getTime()
+										});
   		com.dinfogarneau.cours526.rtcLayer.setMap(com.dinfogarneau.cours526.carte);
 	}
 	else{
