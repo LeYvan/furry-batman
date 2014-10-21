@@ -142,7 +142,7 @@ com.dinfogarneau.cours526.creeInfoWindowAjouterAvis = function(marker){
 	btnEnvoyer.className = btnEnvoyer.id;
 	btnEnvoyer.textContent = "Envoyer";
 	btnEnvoyer.marker = marker;
-	btnEnvoyer.addEventListener('click',envoyerAvis);
+	btnEnvoyer.addEventListener('click',com.dinfogarneau.cours526.envoyerAvis);
 
 	var loading = document.createElement('span');
 	loading.id = 'chargementAvis';
@@ -173,8 +173,8 @@ com.dinfogarneau.cours526.creeInfoWindowAjouterAvis = function(marker){
 	Description: afficher fenêtre d'ajout d'avis.
 */
 com.dinfogarneau.cours526.btnPosterAvisClick = function(marker) {
-	var infoWinow = creeInfoWindowAjouterAvis(marker);
-	infoWindow.open(carte,marker);
+	var infoWindow = com.dinfogarneau.cours526.creeInfoWindowAjouterAvis(marker);
+	infoWindow.open(com.dinfogarneau.cours526.carte,marker);
 };
 
 /* ===========================================================================
